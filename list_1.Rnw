@@ -64,7 +64,7 @@ X[1:5]
 <<>>=
 x = seq(0, 40, 0.1)
 plot(x, dexp(x, 0.2), type="l", col=1, main='Exponencial vs. histograma')
-hist(X, add=T, freq=F, border=2)
+hist(X, add=T, freq=F, border=2, breaks=15)
 legend("topright", c("Exponencial", "Histograma"), fill=c(1, 2))
 @
         
