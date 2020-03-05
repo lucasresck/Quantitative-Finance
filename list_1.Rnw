@@ -45,8 +45,8 @@
     
 <<>>=
 x = seq(-5, 5, 0.01)
-plot(x, pnorm(x), type="l", main="Exemplo de cdfs", col=1)
-lines(x, pnorm(x, 1), col=2)
+plot(x, pnorm(x, 1), type="l", main="Exemplo de cdfs", col=1)
+lines(x, pnorm(x), col=2)
 legend("topleft", c("F1", "F2"), fill=c(1, 2))
 @
     
