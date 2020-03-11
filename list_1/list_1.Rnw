@@ -63,17 +63,22 @@ X[1:5]
         \item
 <<>>=
 x = seq(0, 40, 0.1)
-plot(x, dexp(x, 0.2), type="l", col=1, main='Exponencial vs. histograma')
+plot(x, dexp(x, 0.2), type="l", col=1,
+     main='Exponencial vs. histograma')
 hist(X, add=T, freq=F, border=2, breaks=15)
-legend("topright", c("Exponencial", "Histograma"), fill=c(1, 2))
+legend("topright", c("Exponencial", "Histograma"),
+       fill=c(1, 2))
 @
         
         \item
 <<>>=
 x = seq(0, 40, 0.1)
-plot(x, dexp(x, 0.2), type="l", col=1, main='Exponencial vs. kernel density estimate')
+plot(x, dexp(x, 0.2), type="l", col=1,
+     main='Exponencial vs. kernel density estimate')
 lines(density(X, 1), col=2)
-legend("topright", c("Exponencial", "Kernel density estimate"), fill=c(1, 2))
+legend("topright",
+       c("Exponencial", "Kernel density estimate"),
+       fill=c(1, 2))
 @
       
         \item
@@ -121,7 +126,8 @@ legend("topright", c("Exponencial", "Kernel density estimate"), fill=c(1, 2))
 <<>>=
 X = rlnorm(10000)
 Y = rcauchy(10000)
-qqplot(X, Y, xlim=c(0, 24), ylim=c(-500, 600), main="Log-normal e Cauchy Q-Q Plot")
+qqplot(X, Y, xlim=c(0, 24), ylim=c(-500, 600),
+       main="Log-normal e Cauchy Q-Q Plot")
 lines(seq(0, 30), seq(0, 30))
 @
             
@@ -154,9 +160,11 @@ myrexp = function(N, LAMBDA) {
         \item
 <<>>=
 N = 1024
-qqplot(myrexp(N, 1/1.5), rexp(2*N, 1/1.5), main="myrexp e rexp QQ-plot")
+qqplot(myrexp(N, 1/1.5), rexp(2*N, 1/1.5), 
+       main="myrexp e rexp QQ-plot")
 lines(seq(-1, 15), seq(-1, 15))
-plot(density(myrexp(2*N, 1/1.5)), col=1, main="myrexp e rexp")
+plot(density(myrexp(2*N, 1/1.5)), col=1,
+     main="myrexp e rexp")
 lines(density(rexp(2*N, 1/1.5)), col=2)#, add=T)
 legend("topright", c("myrexp", "rexp"), fill=c(1, 2))
 @
