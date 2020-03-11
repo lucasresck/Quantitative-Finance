@@ -1,0 +1,11 @@
+*-checkpoint.ipynb
+*unnamed*.pdf
+.Rhistory
+*-concordance.tex
+*.log
+*.gz
+.RData
+*.tex
+*.fdb_latexmk
+*.aux
+*.fls
