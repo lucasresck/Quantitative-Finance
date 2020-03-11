@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Finanças Quantitativas \\
+  \large Lista de exercícios 1 - extra}
+\author{Lucas Emanuel Resck Domingues}
+\date{Março de 2020}
+
+\begin{document}
+
+  \maketitle
+  
+  \section*{Volatility smile}
+  
+    A volatilidade $\sigma$ é uma das entradas da fórmula de Black-Scholes: $$r, T, K, S, \sigma \mapsto BS(r, T, K, S, \sigma)$$ Quanto tudo, menos $\sigma$, é mantido constante, o preço de BS é uma função injetiva de $\sigma$. Se utilizarmos o preço de mercado e encontramos o valor de $\sigma$, chamamos \textbf{volatilidade implícita}.
+  
+    Esperaríamos que a volatilidade implícita fosse constante se variássemos o valor do strike $K$, por suposição. Porém o mercado não funciona assim. Um gráfico que mostra a variação da volatilidade implícita quando o strike varia é chamado de \textbf{volatility smile}.
+  
+    O seguinte volatility smile é observado utilizando os dados de call options do GOOGL, com data de expiração 2020-03-20, consultados no Bloomberg Terminal.
+  
+<<>>=
+GOOGL = read.csv('GOOGL.csv')
+Strike = as.numeric(as.character(GOOGL$Strike))
+IVM = as.numeric(as.character(GOOGL$IVM))
+plot(Strike, IVM, xlim=c(1000, 1600), ylim=c(30, 80),
+     main="GOOGL volatility smile")
+@
+  
+
+\end{document}
