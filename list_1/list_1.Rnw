@@ -26,7 +26,7 @@
     
     \begin{enumerate}
     
-      \item Em um GG-plot, com $\pi_p^{(1)}$ na abscissa e $\pi_p^{(2)}$ na ordenada, no lado esquerdo do gráfico teremos pontos abaixo de $y=x$. Ou seja, para uma mesma área, $F_2$ "leva em quantis maiores (em valor absoluto)", portanto possui cauda esquerda mais pesada.
+      \item Em um Q-Q plot, com $\pi_p^{(1)}$ na abscissa e $\pi_p^{(2)}$ na ordenada, no lado esquerdo do gráfico teremos pontos abaixo de $y=x$. Ou seja, para uma mesma área, $F_2$ "leva em quantis maiores (em valor absoluto)", portanto possui cauda esquerda mais pesada.
       
       \item No lado direito do gráfico teremos pontos abaixo de $y=x$. Portanto, $F_1$ possui cauda direita mais pesada.
       
@@ -161,7 +161,7 @@ myrexp = function(N, LAMBDA) {
 <<>>=
 N = 1024
 qqplot(myrexp(N, 1/1.5), rexp(2*N, 1/1.5), 
-       main="myrexp e rexp QQ-plot")
+       main="myrexp e rexp Q-Q plot")
 lines(seq(-1, 15), seq(-1, 15))
 plot(density(myrexp(2*N, 1/1.5)), col=1,
      main="myrexp e rexp")
