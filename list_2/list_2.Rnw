@@ -1,0 +1,76 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\title{Finanças Quantitativas \\
+  \large Lista de exercícios 2}
+\author{Lucas Emanuel Resck Domingues}
+\date{Abril de 2020}
+
+\renewcommand{\labelenumii}{\arabic{enumii}}
+
+\begin{document}
+
+  \maketitle
+  
+  \section*{\textit{Mean excess function} como função linear em $\ell$}
+    
+      Conhecemos a expressão para a distribuição dos excessos, que sabemos ser uma GPD.
+      $$F_\ell(x) = 1 - \left[\dfrac{1+\xi(x+\ell-m)/\lambda}{1+\xi(\ell-m)/\lambda}\right]^{-1/\xi}$$
+      Então podemos calcular sua média:
+      
+      \begin{align*}
+        E(X - \ell \mid X > \ell) &= \int_0^\infty (1 - F_\ell(x))dx \\
+        &= \int_0^\infty \left[\dfrac{1+\xi(x+\ell-m)/\lambda}{1+\xi(\ell-m)/\lambda}\right]^{-1/\xi}dx \\
+        &= \dfrac{\xi}{1 - \xi}\ell + \dfrac{\lambda}{1 - \xi}
+      \end{align*}
+      
+      A \textit{mean excess function} é linear em $\ell$.
+      
+    \section*{Problema 2.2}
+    
+      \begin{enumerate}
+        
+        \item
+        
+          \begin{enumerate}
+          
+            \item
+            
+              Sabemos a fórmula para uma GPD, que segue com $m = 0$ e $\lambda = 1$:
+              $$F_{0, 1, \xi}(x) = \left\{
+                \begin{aligned}
+                  &1 - (1 + \xi x)^{-1/\xi}, &\xi \ne 0 \\
+                  &1 - \exp(-x), &\xi = 0
+                \end{aligned}\right.$$
+                
+            \item Ora, se $F_{0, 1, \xi}(\pi_p) = p$, então:
+              $$\pi_p = \left\{
+                \begin{aligned}
+                  &\dfrac{(p - 1)^{-\xi} + 1}{-\xi}, &\xi \ne 0 \\
+                  &-\log(1-p), &\xi = 0
+                \end{aligned}\right.$$
+                
+            \item Seja $U\sim \mathrm{u}[0, 1]$. Sabemos que $U = F_{0, 1, \xi}(X)$, logo $X = F^{-1}_{0, 1, \xi}(U)$. Podemos gerar $U$ e sabemos $F_{0, 1, \xi}^{-1}$, então podemos gerar $X$.
+            
+          \end{enumerate}
+          
+        \item Sejam $X \sim \mathrm{Exp}(1/2)$, $W \sim \mathrm{Pareto}(\xi = 1/2, m=0, \lambda = 1)$, $Z = \mathrm{Be}(1/3)$. Então $Y = XZ + (1-Z)(-W)$. Podemos calcular sua cdf:
+            
+          \begin{align*}
+            P(Y \le y) &= P(XZ + (1-Z)(-W) \le y) \\
+            &= P(XZ + (1-Z)(-W) \le y \mid Z = 1) \cdot P(Z=1) \\
+            &+ P(XZ + (1-Z)(-W) \le y \mid Z = 0) \cdot P(Z=0) \\
+            &= P(X \le y) \cdot P(Z=1) + P(-W \le y) \cdot P(Z=0) \\
+            &= P(X \le y)\dfrac{1}{3} + (1 - P(W \le -y))\dfrac{2}{3} \\
+            &= \dfrac{1}{6} e^{-\frac{1}{2}x}+\dfrac{2}{3}\left(1+\dfrac{1}{2}x\right)^{-2}
+          \end{align*}
+          
+          Deriva-se:
+          $$f_Y(y) = -\dfrac{1}{12}e^{-\frac{1}{2}y} - \dfrac{2}{3} \left(1 + \dfrac{1}{2}y\right)^{-3}$$
+          
+        \item Observe que eu já possuo a cdf de $Y$ no exercício anterior. Essa função não é trivialmente invertível. Porém, é possível calcular numericamente $F_Y$ e, em posse de $U \sim \mathrm{u}[0, 1]$, $Y = F_Y^{-1}(U)$ está dado.
+            
+      \end{enumerate}
+
+\end{document}
