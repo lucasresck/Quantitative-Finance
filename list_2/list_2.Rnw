@@ -7,70 +7,294 @@
 \author{Lucas Emanuel Resck Domingues}
 \date{Abril de 2020}
 
-\renewcommand{\labelenumii}{\arabic{enumii}}
+%\renewcommand{\labelenumii}{\arabic{enumii}}
 
 \begin{document}
 
   \maketitle
   
+  \textbf{Referência}: Carmona, René. Statistical analysis of financial data in R, 2013.
+  
   \section*{\textit{Mean excess function} como função linear em $\ell$}
     
-      Conhecemos a expressão para a distribuição dos excessos, que sabemos ser uma GPD.
-      $$F_\ell(x) = 1 - \left[\dfrac{1+\xi(x+\ell-m)/\lambda}{1+\xi(\ell-m)/\lambda}\right]^{-1/\xi}$$
-      Então podemos calcular sua média:
-      
-      \begin{align*}
-        E(X - \ell \mid X > \ell) &= \int_0^\infty (1 - F_\ell(x))dx \\
-        &= \int_0^\infty \left[\dfrac{1+\xi(x+\ell-m)/\lambda}{1+\xi(\ell-m)/\lambda}\right]^{-1/\xi}dx \\
-        &= \dfrac{\xi}{1 - \xi}\ell + \dfrac{\lambda}{1 - \xi}
-      \end{align*}
-      
-      A \textit{mean excess function} é linear em $\ell$.
-      
-    \section*{Problema 2.2}
+    Conhecemos a expressão para a distribuição dos excessos, que sabemos ser uma GPD.
+    $$F_\ell(x) = 1 - \left[\dfrac{1+\xi(x+\ell-m)/\lambda}{1+\xi(\ell-m)/\lambda}\right]^{-1/\xi}$$
+    Então podemos calcular sua média:
     
-      \begin{enumerate}
+    \begin{align*}
+      E(X - \ell \mid X > \ell) &= \int_0^\infty (1 - F_\ell(x))dx \\
+      &= \int_0^\infty \left[\dfrac{1+\xi(x+\ell-m)/\lambda}{1+\xi(\ell-m)/\lambda}\right]^{-1/\xi}dx \\
+      &= \dfrac{\xi}{1 - \xi}\ell + \dfrac{\lambda}{1 - \xi}
+    \end{align*}
+    
+    A \textit{mean excess function} é linear em $\ell$.
+    
+  \section*{Problema 2.2}
+  
+    \begin{enumerate}
+      
+      \item
+      
+        \begin{enumerate}
         
-        \item
+          \item
+          
+            Sabemos a fórmula para uma GPD, que segue com $m = 0$ e $\lambda = 1$:
+            $$F_{0, 1, \xi}(x) = \left\{
+              \begin{aligned}
+                &1 - (1 + \xi x)^{-1/\xi}, &\xi \ne 0 \\
+                &1 - \exp(-x), &\xi = 0
+              \end{aligned}\right.$$
+              
+          \item Ora, se $F_{0, 1, \xi}(\pi_p) = p$, então:
+            $$\pi_p = \left\{
+              \begin{aligned}
+                &\dfrac{(1 - p)^{-\xi} - 1}{\xi}, &\xi \ne 0 \\
+                &-\log(1-p), &\xi = 0
+              \end{aligned}\right.$$
+              
+          \item Seja $U\sim \mathrm{u}[0, 1]$. Sabemos que $U = F_{0, 1, \xi}(X)$, logo $X = F^{-1}_{0, 1, \xi}(U)$. Podemos gerar $U$ e sabemos $F_{0, 1, \xi}^{-1}$, então podemos gerar $X$.
+          
+        \end{enumerate}
         
-          \begin{enumerate}
+      \item Sejam $X \sim \mathrm{Exp}(1/2)$, $W \sim \mathrm{Pareto}(\xi = 1/2, m=0, \lambda = 1)$, $Z = \mathrm{Be}(1/3)$. Então $Y = XZ + (1-Z)(-W)$. Podemos calcular sua c.d.f.:
           
-            \item
+        \begin{align*}
+          P(Y \le y) &= P(XZ + (1-Z)(-W) \le y) \\
+          &= P(XZ + (1-Z)(-W) \le y \mid Z = 1) \cdot P(Z=1) \\
+          &+ P(XZ + (1-Z)(-W) \le y \mid Z = 0) \cdot P(Z=0) \\
+          &= P(X \le y) \cdot P(Z=1) + P(-W \le y) \cdot P(Z=0) \\
+          &= P(X \le y)\dfrac{1}{3} + (1 - P(W \le -y))\dfrac{2}{3} \\
+          &= \dfrac{1}{6} e^{-\frac{1}{2}x}+\dfrac{2}{3}\left(1+\dfrac{1}{2}x\right)^{-2}
+        \end{align*}
+        
+        Deriva-se:
+        $$f_Y(y) = -\dfrac{1}{12}e^{-\frac{1}{2}y} - \dfrac{2}{3} \left(1 + \dfrac{1}{2}y\right)^{-3}$$
+        
+      \item Observe que eu já possuo a c.d.f. de $Y$ no exercício anterior. Essa função não é trivialmente invertível. Porém, é possível calcular numericamente $F_Y$ e, em posse de $U \sim \mathrm{u}[0, 1]$, $Y = F_Y^{-1}(U)$ está dado.
+
+    \end{enumerate}
+      
+  \section*{Problema 2.3}
+  
+    \begin{enumerate}
+    
+      \item
+    
+        \begin{enumerate}
+        
+          \item $L$ tem distribuição exponencial com taxa $r$. Sua c.d.f.:
+            $$F_L(t) = 1 - e^{-rt}$$
             
-              Sabemos a fórmula para uma GPD, que segue com $m = 0$ e $\lambda = 1$:
-              $$F_{0, 1, \xi}(x) = \left\{
-                \begin{aligned}
-                  &1 - (1 + \xi x)^{-1/\xi}, &\xi \ne 0 \\
-                  &1 - \exp(-x), &\xi = 0
-                \end{aligned}\right.$$
-                
-            \item Ora, se $F_{0, 1, \xi}(\pi_p) = p$, então:
-              $$\pi_p = \left\{
-                \begin{aligned}
-                  &\dfrac{(p - 1)^{-\xi} + 1}{-\xi}, &\xi \ne 0 \\
-                  &-\log(1-p), &\xi = 0
-                \end{aligned}\right.$$
-                
-            \item Seja $U\sim \mathrm{u}[0, 1]$. Sabemos que $U = F_{0, 1, \xi}(X)$, logo $X = F^{-1}_{0, 1, \xi}(U)$. Podemos gerar $U$ e sabemos $F_{0, 1, \xi}^{-1}$, então podemos gerar $X$.
+          \item Invertendo $F_L$, obtemos:
+            $$F_L^{-1}(p) = -\dfrac{\log(1 - p)}{r}$$
+            Portanto,
             
-          \end{enumerate}
+            \begin{align*}
+              VaR_\alpha &= F_L^{-1}(1 - \alpha) \\
+              &= -\dfrac{\log(\alpha)}{r}
+            \end{align*}
+            
+          \item Como $L \sim \mathrm{Exp}(r)$, $f_L(t) = r e^{-rt}$. Então:
           
-        \item Sejam $X \sim \mathrm{Exp}(1/2)$, $W \sim \mathrm{Pareto}(\xi = 1/2, m=0, \lambda = 1)$, $Z = \mathrm{Be}(1/3)$. Então $Y = XZ + (1-Z)(-W)$. Podemos calcular sua cdf:
-            
-          \begin{align*}
-            P(Y \le y) &= P(XZ + (1-Z)(-W) \le y) \\
-            &= P(XZ + (1-Z)(-W) \le y \mid Z = 1) \cdot P(Z=1) \\
-            &+ P(XZ + (1-Z)(-W) \le y \mid Z = 0) \cdot P(Z=0) \\
-            &= P(X \le y) \cdot P(Z=1) + P(-W \le y) \cdot P(Z=0) \\
-            &= P(X \le y)\dfrac{1}{3} + (1 - P(W \le -y))\dfrac{2}{3} \\
-            &= \dfrac{1}{6} e^{-\frac{1}{2}x}+\dfrac{2}{3}\left(1+\dfrac{1}{2}x\right)^{-2}
-          \end{align*}
+            \begin{align*}
+              E(X \mid X \ge VaR_\alpha) &= \dfrac{1}{P(L \ge VaR_\alpha)} \int_{VaR_\alpha}^\infty rte^{-rt}dt \\
+              &= \dfrac{1}{1-F_L(VaR_\alpha)} \left(VaR_\alpha e^{-r VaR_\alpha} + \dfrac{e^{-r VaR_\alpha}}{r}\right) \\
+              &= \dfrac{1}{\alpha} \left(VaR_\alpha \cdot \alpha + \dfrac{\alpha}{r}\right) \\
+              &= \dfrac{1 - \log\alpha}{r}
+            \end{align*}
+        
+        \end{enumerate}
+        
+      \item
+      
+        \begin{enumerate}
+        
+          \item Substituindo os parâmetros dados na expressão da c.d.f. da Pareto:
+            $$F_{0, 1, \xi}(t) = \left\{
+              \begin{aligned}
+                &1 - (1 + \xi t)^{-1/\xi}, &\xi \ne 0 \\
+                &1 - \exp(-t), &\xi = 0
+              \end{aligned}\right.$$
           
-          Deriva-se:
-          $$f_Y(y) = -\dfrac{1}{12}e^{-\frac{1}{2}y} - \dfrac{2}{3} \left(1 + \dfrac{1}{2}y\right)^{-3}$$
+          \item Conhecemos a inversa da GPD com esses parâmetros pelo exercício 1.2 do problema 2.2. Segue que:
+            $$VaR_\alpha =
+              \begin{cases}
+                \dfrac{\alpha^{-\xi} - 1}{\xi}, &\xi \ne 0 \\
+                -\log(\alpha), &\xi = 0
+              \end{cases}$$
+              
+          \item
           
-        \item Observe que eu já possuo a cdf de $Y$ no exercício anterior. Essa função não é trivialmente invertível. Porém, é possível calcular numericamente $F_Y$ e, em posse de $U \sim \mathrm{u}[0, 1]$, $Y = F_Y^{-1}(U)$ está dado.
+            \begin{align*}
+              E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{1 - P(L < VaR_\alpha)}\int_{VaR_\alpha}^\infty t f_L(t)dt \\
+              &= \dfrac{1}{1 - F_L(VaR_\alpha)}\int_{VaR_\alpha}^\infty t f_L(t)dt \\
+              &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t f_L(t)dt
+            \end{align*}
             
-      \end{enumerate}
+            Para $\xi = 0$:
+            
+            \begin{align*}
+              E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t \dfrac{d}{dt}(1 - e^{-t})dt \ \ \ \textrm{(achamos a p.d.f. a partir da c.d.f.)}\\
+               &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t e^{-t} dt \\
+               &= \dfrac{1}{\alpha} (VaR_\alpha e^{-VaR_\alpha} + e^{-VaR_\alpha}) \\
+               &= 1 - \log(\alpha) \\
+            \end{align*}
+            
+            Para $\xi \ne 0$:
+            
+            \begin{align*}
+                E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t (1 + \xi t)^{-(1 + 1/\xi)} \\
+                &= \dfrac{1}{\alpha} \left(VaR_\alpha(1 + \xi VaR_\alpha)^{-1/\xi} - \dfrac{(1 + \xi VaR_\alpha)^{-1/\xi + 1}}{\xi - 1}\right)\\
+            \end{align*}
+            
+            Como $(1 + \xi VaR_\alpha)^{-1/\xi} = 1 - F_L(VaR_\alpha) = \alpha$, pela def. de $VaR_\alpha$:
+            
+            \begin{align*}
+              E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha} \left(\dfrac{\alpha^{-\xi + 1}-\alpha}{\xi} - \dfrac{\alpha^{-\xi+1}}{\xi-1}\right) \\
+              &= \dfrac{\alpha^{-\xi}-1}{\xi} - \dfrac{\alpha^{-\xi}}{\xi-1}
+            \end{align*}
+          
+        \end{enumerate}
+        
+      \item
+      
+        \begin{enumerate}
+          
+          \item Se $\xi = 0$:
+            $$-\dfrac{\log\alpha}{r} = -\log\alpha \Rightarrow r = 1$$
+            
+            Se $\xi \ne 0$:
+            $$-\dfrac{\log\alpha}{r} = \dfrac{\alpha^{-\xi} - 1}{\xi}$$
+          
+          \item Se $\xi = 0$:
+          
+            Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais.
+          
+            Se $\xi \ne 0$:
+            
+            Para a dist. exponencial  $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r = 1/r - \log\alpha / r$. Para a de Pareto,
+            $$E(L \mid L \ge VaR_\alpha) = \dfrac{\alpha^{-\xi}-1}{\xi} - \dfrac{\alpha^{-\xi}}{\xi-1} =  -\dfrac{\log\alpha}{r} - \dfrac{\alpha^{-\xi}}{\xi-1}$$
+            
+            São diferentes, com uma parcela em comum.
+            
+        \end{enumerate}
+    
+    \end{enumerate}
+    
+  \section*{Problema 2.4}
+  
+    \begin{enumerate}
+    
+      \item
+      
+<<>>=
+suppressMessages(library(Rsafd))
+data(PCS, "PCS", package = "Rsafd")
+shape.plot(PCS[, 2])
+@
+
+        Escolho $\ell$ tal que $\xi$ não varie muito quando $\ell$ varia, $\ell = 9$.
+      
+<<>>=
+PCS.est = gpd.tail(data = PCS[,2], upper = 10, one.tail = T)
+PCSsim = gpd.1q(p = runif(dim(PCS)[1] * 5), obj = PCS.est)
+@
+    
+      \item
+      
+<<>>=
+qqplot(PCSsim, PCS[,2])
+abline(0, 1)
+@
+        
+        O Q-Q plot indica que os dados são semelhantes.
+        
+      \item Verificamos o \textit{two-sample Kolmogorov-Smirnov goodness-of-fit test}:
+        
+<<>>=
+suppressWarnings(ks.test(PCSsim, PCS[,2]))
+@
+        
+        Como o p-valor é muito alto, não rejeitamos a hipótese de que ambas as amostras possuem mesma distribuição.
+        
+    \end{enumerate}
+    
+  \section*{Problema 2.6}
+  
+    \begin{enumerate}
+      
+      \item 
+      
+<<>>=
+data(DSP, "DSP", package = "Rsafd")
+DSPLRet = diff(log(DSP))
+@
+      
+      \item 
+      
+<<>>=
+data(MSP, "MSP", package = "Rsafd")
+MSPLRet = diff(log(MSP))
+@
+
+      \item
+      
+<<>>=
+qqplot(DSPLRet, MSPLRet)
+@
+        
+        A distribuição dos pontos no Q-Q plot se assemelha a uma reta. Isso indica que, apenas em uma mudança de escala, as distribuições das duas amostras possuem mesma cauda (ou próximo disso). Espera-se que as propriedades sejam semelhantes.
+        
+      \item
+      
+<<>>=
+print(c(mean(DSPLRet), mean(MSPLRet)))
+print(c(var(DSPLRet), var(MSPLRet)))
+@
+      
+        Apenas por essas estatísticas, não diria que essas distribuições são as mesmas.
+        
+      \item Vamos verificar quais \textit{thresholds} seriam adequados para o ajuste de uma GPD para DSP.
+      
+<<>>=
+suppressWarnings(shape.plot(DSPLRet))
+suppressWarnings(shape.plot(DSPLRet, tail = "lower"))
+@
+
+        Nas duas caudas, é razoável tomar $|\xi| = 0.010$.
+        
+<<>>=
+DSPLRet.est = suppressWarnings(gpd.tail(DSPLRet,
+                                        upper = 0.010,
+                                        lower = -0.010))
+@
+
+        O resultado ficou bom, pois os dados aproximam retas.
+        
+        Ajustamos agora uma GPD para MSP.
+        
+<<>>=
+MSPLRet.est = suppressWarnings(gpd.tail(MSPLRet,
+                                        upper = 0.0004,
+                                        lower = -0.0004))
+@
+
+        Os dados não se parecem com uma reta. Porém, ao realizar o plot de MSPLRet, observa-se que os dados estão realmente discretizados.
+        
+        Verificamos, agora, os parâmetros de forma (\textit{shape}):
+        
+<<>>=
+# Cauda direita
+print(c(DSPLRet.est$upper.par.ests["xi"],
+        MSPLRet.est$upper.par.ests["xi"]))
+# Cauda esquerda
+print(c(DSPLRet.est$lower.par.ests["xi"],
+        MSPLRet.est$lower.par.ests["xi"]))
+@
+        
+        Os parâmetros de forma não são semelhantes.
+      
+    \end{enumerate}
 
 \end{document}
