@@ -1,5 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
 \usepackage{amsmath}
 
 \title{Finanças Quantitativas \\
@@ -71,7 +73,7 @@
         Deriva-se:
         $$f_Y(y) = -\dfrac{1}{12}e^{-\frac{1}{2}y} - \dfrac{2}{3} \left(1 + \dfrac{1}{2}y\right)^{-3}$$
         
-      \item Observe que eu já possuo a c.d.f. de $Y$ no exercício anterior. Essa função não é trivialmente invertível. Porém, é possível calcular numericamente $F_Y$ e, em posse de $U \sim \mathrm{u}[0, 1]$, $Y = F_Y^{-1}(U)$ está dado.
+      \item Observe que eu já possuo a c.d.f. de $Y$ no exercício anterior. Essa função não é trivialmente invertível. Porém, é possível calcular numericamente $F_Y^{-1}$ e, em posse de $U \sim \mathrm{u}[0, 1]$, $Y = F_Y^{-1}(U)$ está dado.
 
     \end{enumerate}
       
@@ -132,28 +134,32 @@
               &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t f_L(t)dt
             \end{align*}
             
-            Para $\xi = 0$:
+            \begin{itemize}
             
-            \begin{align*}
-              E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t \dfrac{d}{dt}(1 - e^{-t})dt \ \ \ \textrm{(achamos a p.d.f. a partir da c.d.f.)}\\
-               &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t e^{-t} dt \\
-               &= \dfrac{1}{\alpha} (VaR_\alpha e^{-VaR_\alpha} + e^{-VaR_\alpha}) \\
-               &= 1 - \log(\alpha) \\
-            \end{align*}
+              \item Para $\xi = 0$:
+                
+                \begin{align*}
+                  E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t \dfrac{d}{dt}(1 - e^{-t})dt \ \ \ \textrm{(achamos a p.d.f. a partir da c.d.f.)}\\
+                   &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t e^{-t} dt \\
+                   &= \dfrac{1}{\alpha} (VaR_\alpha e^{-VaR_\alpha} + e^{-VaR_\alpha}) \\
+                   &= 1 - \log(\alpha) \\
+                \end{align*}
+                
+              \item Para $\xi \ne 0$:
             
-            Para $\xi \ne 0$:
-            
-            \begin{align*}
-                E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t (1 + \xi t)^{-(1 + 1/\xi)} \\
-                &= \dfrac{1}{\alpha} \left(VaR_\alpha(1 + \xi VaR_\alpha)^{-1/\xi} - \dfrac{(1 + \xi VaR_\alpha)^{-1/\xi + 1}}{\xi - 1}\right)\\
-            \end{align*}
-            
-            Como $(1 + \xi VaR_\alpha)^{-1/\xi} = 1 - F_L(VaR_\alpha) = \alpha$, pela def. de $VaR_\alpha$:
-            
-            \begin{align*}
-              E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha} \left(\dfrac{\alpha^{-\xi + 1}-\alpha}{\xi} - \dfrac{\alpha^{-\xi+1}}{\xi-1}\right) \\
-              &= \dfrac{\alpha^{-\xi}-1}{\xi} - \dfrac{\alpha^{-\xi}}{\xi-1}
-            \end{align*}
+                \begin{align*}
+                    E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha}\int_{VaR_\alpha}^\infty t (1 + \xi t)^{-(1 + 1/\xi)} \\
+                    &= \dfrac{1}{\alpha} \left(VaR_\alpha(1 + \xi VaR_\alpha)^{-1/\xi} - \dfrac{(1 + \xi VaR_\alpha)^{-1/\xi + 1}}{\xi - 1}\right)\\
+                \end{align*}
+                
+                Como $(1 + \xi VaR_\alpha)^{-1/\xi} = 1 - F_L(VaR_\alpha) = \alpha$, pela def. de $VaR_\alpha$:
+                
+                \begin{align*}
+                  E(L \mid L \ge VaR_\alpha) &= \dfrac{1}{\alpha} \left(\dfrac{\alpha^{-\xi + 1}-\alpha}{\xi} - \dfrac{\alpha^{-\xi+1}}{\xi-1}\right) \\
+                  &= \dfrac{\alpha^{-\xi}-1}{\xi} - \dfrac{\alpha^{-\xi}}{\xi-1}
+                \end{align*}
+                
+            \end{itemize}
           
         \end{enumerate}
         
@@ -161,22 +167,34 @@
       
         \begin{enumerate}
           
-          \item Se $\xi = 0$:
-            $$-\dfrac{\log\alpha}{r} = -\log\alpha \Rightarrow r = 1$$
-            
-            Se $\xi \ne 0$:
-            $$-\dfrac{\log\alpha}{r} = \dfrac{\alpha^{-\xi} - 1}{\xi}$$
+          \item
           
-          \item Se $\xi = 0$:
-          
-            Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais.
-          
-            Se $\xi \ne 0$:
+            \begin{itemize}
             
-            Para a dist. exponencial  $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r = 1/r - \log\alpha / r$. Para a de Pareto,
-            $$E(L \mid L \ge VaR_\alpha) = \dfrac{\alpha^{-\xi}-1}{\xi} - \dfrac{\alpha^{-\xi}}{\xi-1} =  -\dfrac{\log\alpha}{r} - \dfrac{\alpha^{-\xi}}{\xi-1}$$
+              \item Se $\xi = 0$:
+                $$-\dfrac{\log\alpha}{r} = -\log\alpha \Rightarrow r = 1$$
             
-            São diferentes, com uma parcela em comum.
+              \item Se $\xi \ne 0$:
+                $$-\dfrac{\log\alpha}{r} = \dfrac{\alpha^{-\xi} - 1}{\xi}$$
+                
+            \end{itemize}
+          
+          \item
+          
+            \begin{itemize}
+            
+              \item Se $\xi = 0$:
+          
+                Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais. Note que isso era esperado, pois tomamos $r = 1$, de modo que nossa exponencial tem taxa $1$, assim como a GPD com $\xi = 0$, $m = 0$ e $\lambda = 1$.
+          
+              \item Se $\xi \ne 0$:
+            
+                Para a dist. exponencial  $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r = 1/r - \log\alpha / r$. Para a de Pareto,
+                $$E(L \mid L \ge VaR_\alpha) = \dfrac{\alpha^{-\xi}-1}{\xi} - \dfrac{\alpha^{-\xi}}{\xi-1} =  -\dfrac{\log\alpha}{r} - \dfrac{\alpha^{-\xi}}{\xi-1}$$
+            
+                São diferentes, com uma parcela em comum.
+                
+            \end{itemize}
             
         \end{enumerate}
     
@@ -191,14 +209,11 @@
 <<>>=
 suppressMessages(library(Rsafd))
 data(PCS, "PCS", package = "Rsafd")
-shape.plot(PCS[, 2])
-@
-
-        Escolho $\ell$ tal que $\xi$ não varie muito quando $\ell$ varia, $\ell = 9$.
-      
-<<>>=
-PCS.est = gpd.tail(data = PCS[,2], upper = 10, one.tail = T)
-PCSsim = gpd.1q(p = runif(dim(PCS)[1] * 5), obj = PCS.est)
+PCS.lmom = gpd.lmom(PCS[,2])
+PCSsim = qgpd(runif(dim(PCS)[1] * 5),
+              m = PCS.lmom$param.est["m"],
+              lambda = PCS.lmom$param.est["lambda"],
+              xi = PCS.lmom$param.est["xi"])
 @
     
       \item
@@ -208,7 +223,7 @@ qqplot(PCSsim, PCS[,2])
 abline(0, 1)
 @
         
-        O Q-Q plot indica que os dados são semelhantes.
+        O Q-Q plot indica que os dados do PCS possuem distribuição muito semelhante à dos dados.
         
       \item Verificamos o \textit{two-sample Kolmogorov-Smirnov goodness-of-fit test}:
         
@@ -216,7 +231,7 @@ abline(0, 1)
 suppressWarnings(ks.test(PCSsim, PCS[,2]))
 @
         
-        Como o p-valor é muito alto, não rejeitamos a hipótese de que ambas as amostras possuem mesma distribuição.
+        Como o p-valor é muito baixo, rejeitamos a hipótese de que os dados possuem mesma distribuição. Ou seja, de que o PCS possui distribuição GPD.
         
     \end{enumerate}
     
@@ -255,46 +270,47 @@ print(c(var(DSPLRet), var(MSPLRet)))
       
         Apenas por essas estatísticas, não diria que essas distribuições são as mesmas.
         
-      \item Vamos verificar quais \textit{thresholds} seriam adequados para o ajuste de uma GPD para DSP.
+      \item
       
 <<>>=
-suppressWarnings(shape.plot(DSPLRet))
-suppressWarnings(shape.plot(DSPLRet, tail = "lower"))
+DSPLRet.lmom = gpd.lmom(DSPLRet)
+MSPLRet.lmom = gpd.lmom(MSPLRet)
+print(c(DSPLRet.lmom$param.est["xi"],
+        MSPLRet.lmom$param.est["xi"]))
 @
 
-        Nas duas caudas, é razoável tomar $|\xi| = 0.010$.
-        
-<<>>=
-DSPLRet.est = suppressWarnings(gpd.tail(DSPLRet,
-                                        upper = 0.010,
-                                        lower = -0.010))
-@
-
-        O resultado ficou bom, pois os dados aproximam retas.
-        
-        Ajustamos agora uma GPD para MSP.
-        
-<<>>=
-MSPLRet.est = suppressWarnings(gpd.tail(MSPLRet,
-                                        upper = 0.0004,
-                                        lower = -0.0004))
-@
-
-        Os dados não se parecem com uma reta. Porém, ao realizar o plot de MSPLRet, observa-se que os dados estão realmente discretizados.
-        
-        Verificamos, agora, os parâmetros de forma (\textit{shape}):
-        
-<<>>=
-# Cauda direita
-print(c(DSPLRet.est$upper.par.ests["xi"],
-        MSPLRet.est$upper.par.ests["xi"]))
-# Cauda esquerda
-print(c(DSPLRet.est$lower.par.ests["xi"],
-        MSPLRet.est$lower.par.ests["xi"]))
-@
-        
-        Os parâmetros de forma não são semelhantes.
+        Os parâmetros de forma não são semelhantes, então deduzimos que as distribuições dos dados também não.
       
+    \end{enumerate}
+    
+  \section*{Problema 2.8}
+  
+    \begin{enumerate}
+    
+      \item
+      
+        \begin{enumerate}
+        
+          \item A amostra da cauda dessa distribuição é a amostra da cauda de uma dist. $f_{\xi_+, m_+, \lambda_+}$. Ou seja, distribuição dos excessos será GPD com $\xi' = \xi_+$, de forma que esperamos $\hat{\xi}_+ \approx  \xi_+$.
+          
+          \item Análogo ao exercício anterior: $\hat{\xi}_+ \approx  \xi_+$.
+          
+          \item Nesse caso, a cauda não é mais uma GPD, de modo que o ajuste fica prejudicado. Muita massa está entre $m_+$ e $2$, então a cauda da dist. ajustada deve ficar mais fina, com $\hat{\xi}_+$ razoavelmente menor do que $\xi_+$.
+          
+        \end{enumerate}
+    
+      \item
+      
+        \begin{enumerate}
+        
+          \item Análogo ao caso em que $\ell = 2$. Ou seja, $\hat{\xi}_- \approx  \xi_+$. Então esperamos algo como $\hat{\pi}_{0,01} \approx \pi_{0,01}$.
+          
+          \item Análogo ao exercício anterior: $\hat{\xi}_- \approx  \xi_+$. Então esperamos algo como $\hat{\pi}_{0,01} \approx \pi_{0,01}$.
+          
+          \item Como no caso em que $\ell$ está entre 0 e 1, esperamos $\hat{\xi}_-$ razoavelmente menor do que $\xi_-$, então a cauda da GPD ajustada é mais fina. Ou seja, seus quantis, em módulo, são menores. Dessa forma, $\hat{\pi}_{0,01} > \pi_{0,01}$.
+          
+        \end{enumerate}
+    
     \end{enumerate}
 
 \end{document}
