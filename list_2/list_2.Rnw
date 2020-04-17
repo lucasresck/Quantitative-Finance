@@ -185,7 +185,7 @@
             
               \item Se $\xi = 0$:
           
-                Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais. Note que isso era esperado, pois tomamos $r = 1$, de modo que nossa exponencial e nossa GPD, que é uma exponencial com taxa 1, sejam a mesma distribuição.
+                Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais. Note que isso era esperado, pois tomamos $r = 1$, de modo que nossa exponencial e nossa GPD, que é uma exponencial com taxa 1, são a mesma distribuição.
           
               \item Se $\xi \ne 0$:
             
