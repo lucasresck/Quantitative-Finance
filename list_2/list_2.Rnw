@@ -185,7 +185,7 @@
             
               \item Se $\xi = 0$:
           
-                Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais. Note que isso era esperado, pois tomamos $r = 1$, de modo que nossa exponencial tem taxa $1$, assim como a GPD com $\xi = 0$, $m = 0$ e $\lambda = 1$.
+                Para a dist. exponencial, $E(L \mid L \ge VaR_\alpha) = (1 - \log\alpha)/r=1 - \log\alpha$. Para a dist. de Pareto, $E(L \mid L \ge VaR_\alpha) = 1-\log\alpha$. Ou seja, são iguais. Note que isso era esperado, pois tomamos $r = 1$, de modo que nossa exponencial e nossa GPD, que é uma exponencial com taxa 1, sejam a mesma distribuição.
           
               \item Se $\xi \ne 0$:
             
@@ -223,7 +223,7 @@ qqplot(PCSsim, PCS[,2])
 abline(0, 1)
 @
         
-        O Q-Q plot indica que os dados do PCS possuem distribuição muito semelhante à dos dados.
+        O Q-Q plot indica que os dados simulados possuem distribuição muito semelhante à dos dados originais, o que indica um bom ajuste.
         
       \item Verificamos o \textit{two-sample Kolmogorov-Smirnov goodness-of-fit test}:
         
@@ -231,7 +231,7 @@ abline(0, 1)
 suppressWarnings(ks.test(PCSsim, PCS[,2]))
 @
         
-        Como o p-valor é muito baixo, rejeitamos a hipótese de que os dados possuem mesma distribuição. Ou seja, de que o PCS possui distribuição GPD.
+        Como o p-valor é muito baixo, rejeitamos a hipótese de que os dados possuem mesma distribuição, ou seja, rejeitamos a hipótese de que o PCS possui distribuição GPD.
         
     \end{enumerate}
     
