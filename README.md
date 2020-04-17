@@ -13,6 +13,10 @@ Topics covered:
   - Random number generator.
 - List 1 extra:
   - Volatility smile.
+- List 2:
+  - Mean excess function;
+  - Generalized Pareto Distributions;
+  - Fit of GPD to data.
 
 Look at the GOOGL call option volatility smile (expiration date on 2020-03-20):
 
