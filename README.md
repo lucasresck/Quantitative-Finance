@@ -17,6 +17,11 @@ Topics covered:
   - Mean excess function;
   - Generalized Pareto Distributions;
   - Fit of GPD to data.
+- List 3:
+  - Correlation and independence;
+  - Copulas;
+  - Multivariate normal distribution;
+  - Multivariate distribution sample generation.
 
 Look at the GOOGL call option volatility smile (expiration date on 2020-03-20):
 
