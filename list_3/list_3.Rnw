@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[portuguese]{babel}
 \usepackage{amsmath, amssymb}
+\usepackage{natbib}
 
 \bibliographystyle{plain}
 
@@ -88,8 +89,85 @@
     \end{enumerate}
   
   \section*{Problema 1}
+    \begin{itemize}
+      \item[(a)] Sabemos que $X = (X_1, X_2) \sim N_d(\mu, \Sigma)$, ou seja,
+        $$(X_{1, 1}, \cdots, X_{1, p}, X_{2, 1}, \cdots, X_{2, q}) \sim N_d\left((\mu_{1, 1}, \cdots, \mu_{2, q}), \begin{bmatrix}\Sigma_{1, 1} & \Sigma_{1, 2} \\ \Sigma_{2, 1} & \Sigma_{2, 2}\end{bmatrix}\right)$$
+        Então cada $X_{1, i}$, pela definição de normal multivariada, é uma normal univariada $N(\mu_i, \Sigma_{i, i})$, sendo $\Sigma_{i, i}$ o elemento $i, i$ da matriz $\Sigma$. Ora, então $X_1 = (X_{1, 1}, \cdots, X_{1, p})$ é uma normal multivariada com vetor de médias $\mu_1$ e matriz de covariâncias dada por $\Sigma_{1, 1}$, como queríamos mostrar.
+        
+      \item[(b)]
+        \begin{align*}
+          f_{X_1 \mid X_2}(x_1 \mid X_2 = x_2) &= \dfrac{f_{X_1, X_2}(x_1, x_2)}{f_{X_2}(x_2)} \\
+          &= \dfrac{\dfrac{\exp\left\{\begin{bmatrix}x_1 - \mu_1 \\ x_2 - \mu_2\end{bmatrix}^T \begin{bmatrix}\Sigma_{1, 1} & \Sigma_{1, 2} \\ \Sigma_{2, 1} & \Sigma_{2, 2}\end{bmatrix}^{-1} \begin{bmatrix}x_1 - \mu_1 \\ x_2 - \mu_2\end{bmatrix}\right\}}{\sqrt{(2\pi)^d \textrm{det}(\Sigma)}}}{\dfrac{\exp\left\{(x_2 - \mu_2)^T \Sigma_{2, 2}^{-1} (x_2 - \mu_2)\right\}}{\sqrt{(2\pi)^q \textrm{det}(\Sigma_{2, 2})}}} \\
+          &\vdots \\
+          &= \dfrac{\exp\left\{(x_1 - \mu_{1 \mid 2})^T \Sigma_{1 \mid 2}^{-1} (x_1 - \mu_{1 \mid 2})\right\}}{\sqrt{(2\pi)^p \textrm{det}(\Sigma_{1 \mid 2})}}
+        \end{align*}
+        
+        Então $X_1 \mid X_2 = x_2 \sim N_p\left(\mu_{1 \mid 2}, \Sigma_{1 \mid 2}\right)$.
+    \end{itemize}
   
   \section*{Problema 2}
+    \begin{itemize}
+        \item[(a)]
+            \begin{align*}
+                F_{X, Y}(x, y) &= C\left(F_X(x), F_Y(y)\right) \\
+                &= \exp\left\{-\left[(-\ln (1 - e^{-rx}))^\theta + \left(-\ln \left(1 - \left(1 + \dfrac{y}{\alpha}\right)^{-\alpha}\right)\right)^\theta\right]^{1/\theta}\right\}
+            \end{align*}
+            
+        \item[(b)] Se $\theta = 1$:
+        
+            \begin{align*}
+                F_{X, Y}(x, y) &= \exp\left\{\ln (1 - e^{-rx}) + \ln \left(1 - \left(1 + \dfrac{y}{\alpha}\right)^{-\alpha}\right)\right\} \\
+                 &= (1 - e^{-rx}) \left(1 - \left(1 + \dfrac{y}{\alpha}\right)^{-\alpha}\right) \\
+                 &= F_X(x) F_Y(y)
+            \end{align*}
+            
+            Logo:
+            
+            \begin{align*}
+                f_{X, Y}(x, y) &= \dfrac{\partial^2 F_{X, Y}(x, y)}{\partial x \partial y} \\
+                &= f_X(x) f_Y(y)
+            \end{align*}
+            
+            Concluímos que as duas variáveis aleatórias são independentes.
+            
+            Caso $\theta \to \infty$, pela convergência de $\sqrt[\theta]{x^\theta + y^\theta}$:
+            
+            \begin{align*}
+                F(x, y) &= \lim_{\theta \to \infty} F_{X, Y}(x, y) \\
+                &= \exp\left\{-\textrm{max}\left\{-\ln (1 - e^{-rx}), -\ln \left(1 - \left(1 + \dfrac{y}{\alpha}\right)^{-\alpha}\right)\right\}\right\} \\
+                &= \exp\left\{\textrm{min}\left\{\ln (1 - e^{-rx}), \ln \left(1 - \left(1 + \dfrac{y}{\alpha}\right)^{-\alpha}\right)\right\}\right\} \\
+                &= \exp\left\{\textrm{min}\left\{\ln F_X(x), \ln F_Y(y)\right\}\right\} \\
+            \end{align*}
+            
+            Fixado $x$ tal que $F_X(x) \in (0, 1)$. Pode-se escolher um intervalo aberto para $y$ de forma que $F_Y(y) < F_X(x)$ nesse intervalo. Ou seja, $\ln F_Y(y) < \ln F_X(x)$ e $F(x, y) = F_Y(y)$, então $f_{X\mid Y}(x\mid y) = 0$. Porém, para todo $x > 0$, $f_X(x) \ne 0$, de modo que não vale $f_X(x) = f_{X\mid Y}(x\mid y)$ para todo $x > 0$. Ou seja, $X$ e $Y$ não são independentes.
+            
+          \item[(c)] 
+          
+<<>>=
+suppressMessages(library(copula))
+
+# Pacote com a dist. de Pareto
+suppressMessages(if(require(EnvStats) == 0) {
+  install.packages("EnvStats")
+})
+suppressMessages(library(EnvStats))
+
+par(mar=c(2,4,1,2))
+# Cópula com marginais exponencial e Pareto
+multivar_dist = mvdc(copula = gumbelCopula(1.5),
+                     margins = c("exp", "pareto"),
+                     paramMargins = list(list(rate = 1),
+                                         list(location = 1,
+                                              shape = 0.5)))
+# Geração de amostra da distribuição multivariada
+data = rMvdc(n = 1000, mvdc = multivar_dist)
+plot(data[, 1], data[, 2],
+     main="Amostra da distribuição conjunta")
+persp(multivar_dist, dMvdc, xlim=c(0,8), ylim=c(0,200),
+      main="PDF conjunta", theta=40*pi)
+@
+
+    \end{itemize}
   
   \bibliography{references}
 
