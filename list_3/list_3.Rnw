@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath, amssymb}
+
+\bibliographystyle{plain}
+
+\title{Finanças Quantitativas \\
+  \large Lista de exercícios 3}
+\author{Lucas Emanuel Resck Domingues}
+\date{Maio de 2020}
+
+%\renewcommand{\labelenumii}{\arabic{enumii}}
+
+\begin{document}
+
+  \maketitle
+  
+  \section*{Problema 3.11 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item Valor esperado de $|X|$:
+      
+        \begin{align*}
+          \mathbb{E}\left[|X|\right] &= \int_{-\infty}^\infty |x| f_X(x) dx \\
+          &= \int_{-\infty}^0 |x| f_X(x) dx + \int_0^\infty |x| f_X(x) dx \\
+          &= \int_{-\infty}^0 -x f_X(x) dx + \int_0^\infty x f_X(x) dx \\
+          &= \int_{\infty}^0 -x f_X(-x) dx + \int_0^\infty x f_X(x) dx \ \ \ \ \textrm{(troca de variável)} \\
+          &= 2\int_0^\infty x f_X(x) dx \\
+          &= 2\int_0^\infty x \dfrac{1}{\sqrt{2\pi}} e^{\frac{1}{2}x^2} dx \\
+          &= \dfrac{2}{\sqrt{2\pi}}
+        \end{align*}
+        
+      \item Calculemos o valor esperado de $Y$:
+      
+        \begin{align*}
+          \mathbb{E}[Y] &= \dfrac{1}{\sqrt{1 - 2/\pi}} \left(\mathbb{E}\left[|X|\right] - \sqrt{2/\pi}\right) \\
+          &= \dfrac{1}{\sqrt{1 - 2/\pi}} \left(\dfrac{2}{\sqrt{2\pi}} - \sqrt{2/\pi}\right) \\
+          &= 0
+        \end{align*}
+        
+        Calculemos agora a variância de $Y$:
+        
+        \begin{align*}
+          \textrm{Var}[Y] &= \dfrac{1}{1 - 2/\pi} \textrm{Var}[|X|] \\
+           &= \dfrac{1}{1 - 2/\pi} \left\{\mathbb{E}\left[|X|^2\right] - \mathbb{E}\left[|X|\right]^2\right\} \\
+           &= \dfrac{1}{1 - 2/\pi} \left\{\mathbb{E}\left[X^2\right] - \dfrac{2}{\pi}\right\} \\
+           &= \dfrac{1}{1 - 2/\pi} \left\{\textrm{Var}[X] + \mathbb{E}[X]^2 - \dfrac{2}{\pi}\right\} \\
+           &= \dfrac{1}{1 - 2/\pi} \left(1 - \dfrac{2}{\pi}\right) \\
+           &= 1
+        \end{align*}
+        
+        Calculemos agora a correlação entre $X$ e $Y$:
+        
+        \begin{align*}
+          \textrm{Corr}[X, Y] &= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y] \\
+          &= \mathbb{E}[XY] \\
+          &= \dfrac{1}{\sqrt{1 - 2/\pi}} \mathbb{E}\left[X |X|\right] \\
+          &= \dfrac{1}{\sqrt{1 - 2/\pi}} \int_{-\infty}^\infty x |x| f_X(x) dx \\
+          &= \dfrac{1}{\sqrt{1 - 2/\pi}} \left(\int_{0}^\infty x^2 f_X(x) - \int_{0}^\infty x^2 f_X(x) dx \right) \ \ \ \ \textrm{(como no exercício anterior)} \\
+          &= 0
+        \end{align*}
+        
+        Portanto $X$ e $Y$ são não correlacionadas.
+    \end{enumerate}
+  
+  \section*{Problema 3.12 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item Sabemos que $X$ e $Y$ são contínuas. Seja $\mathbf{Z} = (X, Y)$. Portanto, vale
+      
+        $$C(u_1, u_2) = F_\mathbf{Z}\left(F_X^{-1}(u_1), F_Y^{-1}(u_2)\right)$$
+        
+        pela definição de cópula. Segue que:
+      
+        \begin{align*}
+          C(F_X(t), F_Y(t)) & = F_\mathbf{Z}\left(F_X^{-1}(F_X(t)), F_Y^{-1}(F_Y(t))\right) \\
+          &= F_\mathbf{Z}(t, t) \\
+          &= \mathbb{P}\{X \le t, Y \le t\} \\
+          &= \mathbb{P}\{\textrm{max}(X, Y) \le t\} \\
+        \end{align*}
+        
+      \item
+        \begin{align*}
+          \mathbb{P}\{\textrm{min}(X, Y) \le t\} &= \mathbb{P}\{(X \le t) \lor (Y \le t)\} \\
+          &= \mathbb{P}\{X \le t\} + \mathbb{P}\{Y \le t\} - \mathbb{P}\{X \le t, Y \le t\} \\
+          &= F_X(t) + F_Y(t) - C(F_X(t), F_Y(t))
+        \end{align*}
+    \end{enumerate}
+  
+  \section*{Problema 1}
+  
+  \section*{Problema 2}
+  
+  \bibliography{references}
+
+\end{document}
