@@ -1,0 +1,253 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{natbib}
+
+\bibliographystyle{plain}
+
+\title{Finanças Quantitativas \\
+  \large Lista de exercícios 4}
+\author{Lucas Emanuel Resck Domingues}
+\date{Maio de 2020}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\cov}{\textrm{cov}}
+\DeclareMathOperator{\var}{\textrm{var}}
+
+            
+<<setup, include=FALSE>>=
+library(knitr)
+opts_chunk$set(fig.align="center", fig.height=6, fig.width=8)
+opts_knit$set(out.format = "latex")
+@
+
+\begin{document}
+
+  \maketitle
+  
+  \section*{Problema 3.17 \cite{carmona_rene_2014}}
+  
+    \begin{enumerate}
+      \item
+        \begin{align*}
+          e^{\sigma^2/2}\E\left\{f(Z + \sigma)\right\} &= e^{\sigma^2/2} \int_{-\infty}^\infty f(z + \sigma) f_Z(z) dx \\
+           &= e^{\sigma^2/2} \int_{-\infty}^\infty f(w) f_Z(w - \sigma) dw \\
+           &= e^{\sigma^2/2} \int_{-\infty}^\infty f(z) f_Z(z - \sigma) dz \\
+           &= e^{\sigma^2/2} \int_{-\infty}^\infty f(z) \dfrac{1}{\sqrt{2\pi}}\exp\left\{-\dfrac{(z - \sigma)^2}{2}\right\} dz \\
+           &= \int_{-\infty}^\infty f(z) \dfrac{1}{\sqrt{2\pi}}\exp\left\{-z^2/2 + z\sigma\right\} dz \\
+           &= \int_{-\infty}^\infty f(z) e^{z \sigma} f_Z(z) dz \\
+           &= \E\left\{f(Z)e^{Z\sigma}\right\}
+        \end{align*}
+    \end{enumerate}
+  
+  \section*{Problema 3.18 \cite{carmona_rene_2014}}
+  
+    \begin{enumerate}
+      \item Sabemos que $Y = \log X \sim \textrm{N}(\mu, \sigma^2)$, logo:
+        \begin{align*}
+          f_X(x) &= f_Y(y)\left|\dfrac{dy}{dx}\right| \\
+          &= f_Y(\log x) \left|\dfrac{d}{dx}(\log x)\right| \\
+          &= f_Y(\log x) \left|\dfrac{1}{x}\right| \\
+          &= \dfrac{1}{x \sigma \sqrt{2 \pi}} \exp\left[-\dfrac{(\log x - \mu)^2}{2 \sigma^2}\right],
+          \ \ \ x > 0
+        \end{align*}
+        
+      \item[2, 3.] Chamemos $\rho$ o coeficiente de correlação \textit{Pearson} entre $X \sim \textrm{Lognormal}(0, 1)$ e $Y \sim \textrm{Lognormal}(0, \sigma^2)$. Então queremos calcular:
+        $$\rho = \dfrac{\cov\{X, Y\}}{\sigma_X \sigma_Y} = \dfrac{\E\{XY\} - \E\{X\}\E\{Y\}}{\sqrt{\var\{X\} \var\{Y\}}}$$
+        Então vamos calcular cada um desses termos. Se $Z_1 = \log X$ e $Z_2 = \log Y$, então $\mathbf{Z} = (Z_1, Z_2)$ têm distribuição normal multivariada. Vejamos a \textit{moment-generating function} da distribuição normal multivariada:
+        \begin{align*}
+          M_{\mathbf{Z}}(\mathbf{t}) &= \E\left\{e^{\mathbf{t}^T\mathbf{Z}}\right\} \\
+          &= \E\left\{e^{t_1 \log X + t_2 \log Y}\right\} \\
+          &= \E\left\{X^{t_1} Y^{t_2}\right\} \\
+        \end{align*}
+        
+        Então $M_{\mathbf{Z}}((1, 1)) = \E\{XY\}$. Através da expressão da \textit{m.g.f} da normal multivariada, encontramos:
+        \begin{align*}
+          \E\{XY\} &= M_{\mathbf{Z}}((1, 1)) \\
+          &= \exp\left\{ \mathbf{\mu}^T \mathbf{t} + \dfrac{1}{2} \mathbf{t}^T \mathbf{\Sigma} \mathbf{t} \right\} \\
+          &= \exp\left\{ \dfrac{1}{2} \left(1 + \sigma^2 + 2a \right) \right\}, \ \ a = \cov\{Z_1, Z_2\}
+        \end{align*}
+        
+        De maneira análoga, é possível calcular $\E\{X\} = e^{\frac{1}{2}}$ e $\E\{Y\} = e^{\frac{\sigma^2}{2}}$. Encontramos também $\var\{X\} = (e - 1)e$ e $\var\{Y\} = (e^{\sigma^2} - 1)e^{\sigma^2}$. Então encontramos $\rho$:
+      
+        \begin{align*}
+          \rho &= \dfrac{\E\{XY\} - \E\{X\}\E\{Y\}}{\sqrt{\var\{X\} \var\{Y\}}} \\
+          &= \dfrac{\exp\left\{ \dfrac{1}{2} \left(1 + \sigma^2 + 2a \right) \right\} - e^{\frac{1}{2}}e^{\frac{\sigma^2}{2}}}{\sqrt{(e - 1)e(e^{\sigma^2} - 1)e^{\sigma^2}}} \\
+          &= \dfrac{e^{a} - 1}{\sqrt{(e - 1)\left(e^{\sigma^2} - 1\right)}}
+        \end{align*}
+      
+        Como $a = \cov\{Z_1, Z_2\}$, encontramos máximo e mínimo para $a$:
+      
+        \begin{align*}
+          -1 \le \dfrac{\cov\{Z_1, Z_2\}}{\sigma_{Z_1} \sigma_{Z_2}} \le 1 \\
+          -1 \le \dfrac{\cov\{Z_1, Z_2\}}{\sigma} \le 1 \\
+          -\sigma \le \cov\{Z_1, Z_2\} \le \sigma
+        \end{align*}
+      
+        Sendo assim, concluímos:
+      
+        $$\rho_{\textrm{min}} = \dfrac{e^{-\sigma} - 1}{\sqrt{(e - 1)\left(e^{\sigma^2} - 1\right)}}$$
+      
+        $$\rho_{\textrm{max}} = \dfrac{e^{\sigma} - 1}{\sqrt{(e - 1)\left(e^{\sigma^2} - 1\right)}}$$
+      
+      \item[4.] \begin{align*}
+          \lim_{\sigma \to \infty} \rho_{\textrm{min}} &= \dfrac{e^{-\sigma} - 1}{\sqrt{(e - 1)\left(e^{\sigma^2} - 1\right)}} \\
+          &= 0
+        \end{align*}
+        
+        \begin{align*}
+          \lim_{\sigma \to \infty} \rho_{\textrm{max}} &= \dfrac{e^{\sigma} - 1}{\sqrt{(e - 1)\left(e^{\sigma^2} - 1\right)}} \\
+          &= \dfrac{1 - 1/e^\sigma}{\sqrt{(e - 1)\left(e^{\sigma^2 - 2\sigma} - 1/e^{2\sigma}\right)}} \\
+          &= 0
+        \end{align*}
+        
+        Podemos ver que esses resultados condizem com as simulações do \textbf{Problema 3.10} \cite{carmona_rene_2014}:
+        
+<<>>=
+suppressMessages(library(Rsafd))
+SIG2 = seq(from = 0.1, to = 200, length.out = 100)
+RHO = seq(from = -1.0, to = 1.0, length.out = 21)
+SIG2_2 = c()
+RHO_TIL = c()
+for(sig2 in SIG2) {
+  for(rho in RHO) {
+    Z = rmvnorm(n = 500, mean = seq(0, 2), sd = c(1, sqrt(sig2)), rho = rho)
+    EXPZ = exp(Z)
+    rho_til = cor(EXPZ[,1], EXPZ[,2])
+    SIG2_2 = append(SIG2_2, sig2)
+    RHO_TIL = append(RHO_TIL, rho_til)
+  }
+}
+plot(SIG2_2, RHO_TIL)
+@
+
+        Ou seja, à medida que $\sigma$ cresce, $\rho$ se aproxima de zero.
+          
+    \end{enumerate}
+    
+  \section*{Problema 3.24 \cite{carmona_rene_2014}}
+  
+    \begin{enumerate}
+      \item
+<<>>=
+suppressMessages(library(copula))
+Pearson = list()
+Kendall = list()
+Spearman = list()
+RHO = seq(from = 0, to = 1, by = 0.05)
+for(i in 1:length(RHO)) {
+  SD = list()
+  temp = rCopula(2000, normalCopula(RHO[i], 2))
+  SD$x = temp[,1]
+  SD$y = temp[,2]
+  SD_norm = list()
+  SD_norm$x = qnorm(SD$x)
+  SD_norm$y = qnorm(SD$y)
+  Pearson[[i]] = cor(SD_norm$x, SD_norm$y,
+                     method = "pearson")
+  Kendall[[i]] = cor(SD_norm$x, SD_norm$y,
+                     method = "kendall")
+  Spearman[[i]] = cor(SD_norm$x, SD_norm$y,
+                      method = "spearman")
+}
+plot(RHO, Pearson)
+plot(RHO, Kendall)
+plot(RHO, Spearman)
+
+@
+      
+      Nos três gráficos encontrados, podemos observar que o coeficiente de correlação cresce praticamente de forma linear com o parâmetro $\rho$ da cópula Gaussiana. $\rho$ descreve a correlação entre as distribuições marginais. Sendo assim, esperamos que as medidas de correlação, que conhecemos, entre as distribuições marginais amostradas tenham valores próximos a $\rho$.
+      
+<<>>=
+Pearson = list()
+Kendall = list()
+Spearman = list()
+RHO = seq(from = 0, to = 1, by = 0.05)
+for(i in 1:length(RHO)) {
+  SD = list()
+  temp = rCopula(2000, normalCopula(RHO[i], 2))
+  SD$x = temp[,1]
+  SD$y = temp[,2]
+  SD_cauchy = list()
+  SD_cauchy$x = qcauchy(SD$x)
+  SD_cauchy$y = qcauchy(SD$y)
+  Pearson[[i]] = cor(SD_cauchy$x, SD_cauchy$y,
+                     method = "pearson")
+  Kendall[[i]] = cor(SD_cauchy$x, SD_cauchy$y,
+                     method = "kendall")
+  Spearman[[i]] = cor(SD_cauchy$x, SD_cauchy$y,
+                      method = "spearman")
+}
+plot(RHO, Pearson)
+plot(RHO, Kendall)
+plot(RHO, Spearman)
+
+@
+      
+      Com exceção do método \textit{Pearson}, os resultados foram parecidos aos anteriores, e as explicações podem ser consideradas as mesmas. No método Pearson, porém, os resultados são muito diferentes. O coeficiente $\rho$ difere bastante do coeficiente de correlação \textit{Pearson}, de modo que o gráfico sequer é crescente. Uma possibilidade é o fato de que o valor esperado de uma distribuição padrão de Cauchy não existe. Sendo assim, não existe a covariância e o coeficiente teórico de correlação \textit{Pearson}, de modo que o coeficiente \textit{Pearson} empírico difere bastante dos outros resultados.
+      
+      \item
+<<>>=
+Pearson = list()
+Kendall = list()
+Spearman = list()
+BETA = seq(from = 1, to = 20, by = 0.5)
+for(i in 1:length(BETA)) {
+  SD = list()
+  temp = rCopula(2000, gumbelCopula(BETA[i], 2))
+  if(BETA[i] %% 5 == 0) {
+    persp(gumbelCopula(BETA[i], 2), dCopula)
+  }
+  SD$x = temp[,1]
+  SD$y = temp[,2]
+  SD_norm = list()
+  SD_norm$x = qnorm(SD$x)
+  SD_norm$y = qnorm(SD$y)
+  Pearson[[i]] = cor(SD_norm$x, SD_norm$y,
+                     method = "pearson")
+  Kendall[[i]] = cor(SD_norm$x, SD_norm$y,
+                     method = "kendall")
+  Spearman[[i]] = cor(SD_norm$x, SD_norm$y,
+                      method = "spearman")
+}
+plot(BETA, Pearson)
+plot(BETA, Kendall)
+plot(BETA, Spearman)
+@
+      
+      A cópula de Gumbel tem uma propridade interessante: se o valor de $\beta$ for pequeno, ela se comporta de maneira parecida com uma distribuição uniforme multivariada (ou seja, baixa correlação). Porém, à medida que $\beta$ cresce, ela obtém o formato que pode ser visto nos gráficos acima. Dessa forma, a correlação entre as marginais cresce muito rápido. Observe que os gráficos correlação vs. $\beta$ são parecidos entre si.
+      
+<<>>=
+Pearson = list()
+Kendall = list()
+Spearman = list()
+BETA = seq(from = 1, to = 20, by = 0.5)
+for(i in 1:length(BETA)) {
+  SD = list()
+  temp = rCopula(2000, gumbelCopula(BETA[i], 2))
+  SD$x = temp[,1]
+  SD$y = temp[,2]
+  SD_cauchy = list()
+  SD_cauchy$x = qcauchy(SD$x)
+  SD_cauchy$y = qcauchy(SD$y)
+  Pearson[[i]] = cor(SD_cauchy$x, SD_cauchy$y,
+                     method = "pearson")
+  Kendall[[i]] = cor(SD_cauchy$x, SD_cauchy$y,
+                     method = "kendall")
+  Spearman[[i]] = cor(SD_cauchy$x, SD_cauchy$y,
+                      method = "spearman")
+}
+plot(BETA, Pearson)
+plot(BETA, Kendall)
+plot(BETA, Spearman)
+@
+      
+      Com exceção do método \textit{Pearson}, os resultados foram parecidos aos anteriores. Da mesma forma que no exercício 1, uma das possibilidades para o método \textit{Pearson} não funcionar bem é pelo fato de que o valor esperado da Cauchy padrão não existe, como explicado anteriormente.
+      
+    \end{enumerate}
+  
+  \bibliography{references}
+
+\end{document}
