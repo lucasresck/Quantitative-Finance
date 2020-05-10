@@ -17,12 +17,13 @@ Topics covered:
   - Mean excess function;
   - Generalized Pareto Distributions;
   - Fit of GPD to data.
-- List 3:
+- Lists 3 & 4:
   - Correlation and independence;
   - Copulas;
   - Multivariate normal distribution;
-  - Multivariate distribution sample generation.
-
+  - Multivariate distribution sample generation;
+  - Principal Components Analysis (PCA).
+  
 Look at the GOOGL call option volatility smile (expiration date on 2020-03-20):
 
 ![](https://github.com/lucasresck/quantitative-finance/blob/master/list_1_extra/volatility_smile.png?raw=true)
