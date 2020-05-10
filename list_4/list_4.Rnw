@@ -40,6 +40,23 @@ opts_knit$set(out.format = "latex")
            &= \int_{-\infty}^\infty f(z) e^{z \sigma} f_Z(z) dz \\
            &= \E\left\{f(Z)e^{Z\sigma}\right\}
         \end{align*}
+        
+        \begin{align*}
+          \E\left\{e^X\right\} &= \E\left\{e^{\mu + \sigma Z}\right\} \\
+          &= e^{\mu} \E\left\{1 \cdot e^{\sigma Z}\right\}, \ \ f \equiv 1 \\
+          &= e^{\mu} e^{\sigma^2/2} \E\left\{1\right\} \\
+          &= e^{\mu + \sigma^2/2}
+        \end{align*}
+        
+      \item
+        \begin{align*}
+          \E\left\{e^X h(Y)\right\} &= \int_{\infty}^{\infty}\int_{\infty}^{\infty} e^x h(y) f_{X, Y}(x, y) dx dy \\
+          &= \int_{\infty}^{\infty}\int_{\infty}^{\infty} e^x h(y + \cov\{X, Y\}) f_{X, Y}(x, y + \cov\{X, Y\}) dx dy \\
+          &\vdots \\
+          &= \int_{\infty}^{\infty}\int_{\infty}^{\infty} e^x h(y + \cov\{X, Y\}) f_{X}(x) f_{Y}(y) dx dy \\
+          &= \int_{\infty}^{\infty} e^x f_{X}(x) dx \int_{\infty}^{\infty} h(y + \cov\{X, Y\}) f_{Y}(y) dy \\
+          &= \E\left\{e^X\right\} \E\left\{h\left(Y + \cov\{X, Y\}\right)\right\}
+        \end{align*}
     \end{enumerate}
   
   \section*{Problema 3.18 \cite{carmona_rene_2014}}
@@ -56,7 +73,7 @@ opts_knit$set(out.format = "latex")
         
       \item[2, 3.] Chamemos $\rho$ o coeficiente de correlação \textit{Pearson} entre $X \sim \textrm{Lognormal}(0, 1)$ e $Y \sim \textrm{Lognormal}(0, \sigma^2)$. Então queremos calcular:
         $$\rho = \dfrac{\cov\{X, Y\}}{\sigma_X \sigma_Y} = \dfrac{\E\{XY\} - \E\{X\}\E\{Y\}}{\sqrt{\var\{X\} \var\{Y\}}}$$
-        Então vamos calcular cada um desses termos. Se $Z_1 = \log X$ e $Z_2 = \log Y$, então $\mathbf{Z} = (Z_1, Z_2)$ têm distribuição normal multivariada. Vejamos a \textit{moment-generating function} da distribuição normal multivariada:
+        Vamos calcular cada um desses termos. Se $Z_1 = \log X$ e $Z_2 = \log Y$, então $\mathbf{Z} = (Z_1, Z_2)$ têm distribuição normal multivariada. Vejamos a \textit{moment-generating function} da distribuição normal multivariada:
         \begin{align*}
           M_{\mathbf{Z}}(\mathbf{t}) &= \E\left\{e^{\mathbf{t}^T\mathbf{Z}}\right\} \\
           &= \E\left\{e^{t_1 \log X + t_2 \log Y}\right\} \\
@@ -70,7 +87,7 @@ opts_knit$set(out.format = "latex")
           &= \exp\left\{ \dfrac{1}{2} \left(1 + \sigma^2 + 2a \right) \right\}, \ \ a = \cov\{Z_1, Z_2\}
         \end{align*}
         
-        De maneira análoga, é possível calcular $\E\{X\} = e^{\frac{1}{2}}$ e $\E\{Y\} = e^{\frac{\sigma^2}{2}}$. Encontramos também $\var\{X\} = (e - 1)e$ e $\var\{Y\} = (e^{\sigma^2} - 1)e^{\sigma^2}$. Então encontramos $\rho$:
+        De maneira análoga, é possível calcular $\E\{X\} = e^{\frac{1}{2}}$ e $\E\{Y\} = e^{\frac{\sigma^2}{2}}$. Encontramos também $\var\{X\} = (e - 1)e$ e $\var\{Y\} = (e^{\sigma^2} - 1)e^{\sigma^2}$, a partir dos valores esperados e da definição de variância. Então encontramos $\rho$:
       
         \begin{align*}
           \rho &= \dfrac{\E\{XY\} - \E\{X\}\E\{Y\}}{\sqrt{\var\{X\} \var\{Y\}}} \\
@@ -107,7 +124,7 @@ opts_knit$set(out.format = "latex")
         
 <<>>=
 suppressMessages(library(Rsafd))
-SIG2 = seq(from = 0.1, to = 200, length.out = 100)
+SIG2 = seq(from = 0.1, to = 20, length.out = 100)
 RHO = seq(from = -1.0, to = 1.0, length.out = 21)
 SIG2_2 = c()
 RHO_TIL = c()
@@ -247,6 +264,70 @@ plot(BETA, Spearman)
       Com exceção do método \textit{Pearson}, os resultados foram parecidos aos anteriores. Da mesma forma que no exercício 1, uma das possibilidades para o método \textit{Pearson} não funcionar bem é pelo fato de que o valor esperado da Cauchy padrão não existe, como explicado anteriormente.
       
     \end{enumerate}
+    
+  \section*{PCA da Estrutura a Termo da Taxa de Juros (ETTJ)}
+  
+    Importamos e verificamos os dados:
+    
+<<>>=
+load("prices_Swap_PRE_DI.RData")
+dim(prices_Swap_PRE_DI)
+head(prices_Swap_PRE_DI)
+@
+    
+    Estamos lidando com dados observados uma vez por dia, durante 3258 dias, a partir do dia 11/06/2002. São 10 dimensões, cada uma indicando a taxa de juros para um número específico de meses para a maturidade, neste caso 1, 2, 3, 4, 6, 12, 24, 36, 48, e 60 meses. Vamos organizar o dataframe e visualizar os dados:
+    
+<<>>=
+columns = colnames(prices_Swap_PRE_DI)[c(3, 5, 6, 7, 8,
+                                         9, 10, 11, 2, 4)]
+yield_br = prices_Swap_PRE_DI[, columns]
+head(yield_br)
+matplot(yield_br, type = "l", lty = 1)
+legend("topright",
+       legend = colnames(yield_br),
+       lwd = 2,
+       col=1:length(colnames(yield_br)),
+       cex=0.6)
+@
+    
+    Então podemos realizar a análise de componentes principais (PCA):
+    
+<<>>=
+yield_br.pca = princomp(yield_br)
+summary(yield_br.pca)
+@
+
+    Observe que os três primeiros componentes principais explicam 99,9\% da variância, sugerindo um "espaço efetivo" \ de três dimensões. Qualquer curva pode ser bem aproximada por uma combinação linear dos três primeiros componentes.
+    
+<<>>=
+plot(yield_br.pca,
+     main = "Proporção da variância explicada pelos componentes")
+@
+
+    Vejamos agora o \textit{plot} dos \textit{loadings}, ou seja, os autovetores:
+    
+<<>>=
+X = c(1, 2, 3, 4, 6, 12, 24, 36, 48, 60)
+par(mfrow = c(2, 2))
+plot(X, yield_br.pca$loadings[, 1], ylim = c(-0.5, 0.5))
+lines(X, yield_br.pca$loadings[, 1], ylim = c(-0.5, 0.5))
+plot(X, yield_br.pca$loadings[, 2], ylim = c(-0.5, 0.5))
+lines(X, yield_br.pca$loadings[, 2], ylim = c(-0.5, 0.5))
+plot(X, yield_br.pca$loadings[, 3], ylim = c(-0.5, 0.5))
+lines(X, yield_br.pca$loadings[, 3], ylim = c(-0.5, 0.5))
+plot(X, yield_br.pca$loadings[, 4], ylim = c(-0.5, 0.5))
+lines(X, yield_br.pca$loadings[, 4], ylim = c(-0.5, 0.5))
+@
+    
+    Podemos observar que os gráficos dos primeiros quatro componentes principais resultam como o esperado:
+    \begin{itemize}
+      \item O primeiro componente é essencilamente constante, de modo que pode ser interpretado como um nível da curva a termos. A intuição é que ele representa os juros médios sobre os vencimentos;
+      \item O segundo componente pode ser interpretado como a tendência da curva a termos, ou seja, se ela cresce ou decresce com o tempo;
+      \item O terceiro representa a curvatura da curva a termos, ou seja, o quanto varia o crescimento ou decrescimento;
+      \item O quarto componente aparentemente não representa nada óbvio.
+    \end{itemize}
+    
+    
   
   \bibliography{references}
 
