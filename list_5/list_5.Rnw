@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\bibliographystyle{plain}
+
+\title{Finanças Quantitativas \\
+  \large Lista de exercícios 5}
+\author{Lucas Emanuel Resck Domingues}
+\date{Maio de 2020}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\cov}{\textrm{cov}}
+\DeclareMathOperator{\var}{\textrm{var}}
+
+            
+<<setup, include=FALSE>>=
+library(knitr)
+opts_chunk$set(fig.align="center", fig.height=6, fig.width=8)
+opts_knit$set(out.format = "latex")
+@
+
+\begin{document}
+  \maketitle
+  
+  \begin{enumerate}
+    \item Os seguintes problemas podem ser encontrados em \cite{carmona_rene_2014}.
+      \begin{itemize}
+        \item[4.1]
+          \begin{enumerate}
+            \item[1.] Aparentemente, os resíduos crus não possuem média zero. Sendo assim, é pouco provável que o \textit{plot} seja dos resíduos crus de uma regressão linear de mínimos quadrados.
+            \item[2.] Cada termo $h_{i, i}$ da diagonal da matriz "chapéu" \ $\mathbf{H}$ pode ser visto como a influência que a $i$-ésima observação tem no cálculo de $\mathbf{\hat{\beta}}$. Observe que, no \textit{plot}, à medida que o valor do índice aumenta, parece que a importância da observação também aumenta, pois os resíduos crus são menores. Então esperamos que os valores da diagonal da matriz chapéu sejam crescentes em $i$.
+            
+            \item[3.] Observe que a regressão linear parece dar pouca importância para as observações que estão muito distantes da reta da regressão linear. Em matéria de regressões lineares simples, mínimos quadrados vs. desvios absolutos mínimos, a regressão de desvios absolutos mínimos dá menos importância para valores mais extremos. Logo, espera-se que a linha seja uma regressão linear de desvios absolutos mínimos.
+          \end{enumerate}
+        
+        \item[4.11]
+          \begin{enumerate}
+            \item[1.]
+            
+<<>>=
+attach(Puromycin)
+Puromycin
+conc = conc[1:12]
+rate = rate[1:12]
+fit = nls(rate ~ Va*conc/(conc + K), start = c(Va = 200, K = 0.1))
+@
+            
+            \item[2.]
+            
+<<>>=
+fit
+plot(conc, rate)
+lines(conc, fitted(fit))
+@
+            
+          \end{enumerate}
+      \end{itemize}
+    \item
+      Queremos encontrar $\mathbf{\beta}$ que minimiza $||\mathbf{Y} - \mathbf{X} \mathbf{\beta}||$, assumindo que $\mathbf{X}$ tem posto completo.
+      
+      Observe que $\mathbf{X\beta}$ pertence ao espaço coluna de $\mathbf{X}$, com os valores de $\mathbf{\beta}$ sendo as coordenadas do espaço com base sendo as colunas de $\mathbf{X}$. Além disso, $\mathrm{col}(\mathbf{X})$ é um subespaço do $\mathbb{R}^n$.
+      
+      Podemos perceber que, se $\mathbf{\hat{\beta}}$ é o valor de $\mathbf{\beta}$ que minimiza $||\mathbf{Y} - \mathbf{X} \mathbf{\beta}||$, então $Y - \mathbf{X\hat{\beta}}$ é ortogonal a $\mathrm{col}(\mathbf{X})$, facilmente demonstrado com a desigualdade triangular.
+      
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.7\textwidth]{least_squares.png}
+      \end{figure}
+      
+      Então, segue que
+      
+      \begin{align}
+        \mathbf{X\hat{\beta}} - \mathbf{Y} \perp \mathrm{col}(\mathbf{X}) &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{col}(\mathbf{X})^{\perp} \label{ls1} \\
+        &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{lin}\left(\mathbf{X}^T\right)^{\perp} \label{ls2} \\
+        &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{anul}\left(\mathbf{X}^T\right) \label{ls3} \\
+        &\Rightarrow \mathbf{X}^T\left(\mathbf{X\hat{\beta}} - \mathbf{Y}\right) = \mathbf{0} \label{ls4} \\
+        &\Rightarrow \mathbf{X}^T\mathbf{X\hat{\beta}} = \mathbf{X}^T \mathbf{Y} \label{ls5} \\
+        &\Rightarrow \mathbf{\hat{\beta}} = \left(\mathbf{X}^T\mathbf{X}\right)^{-1} \mathbf{X}^T \mathbf{Y} \label{ls6}
+      \end{align}
+      
+      em que \eqref{ls3} vale pois $\mathbf{X\hat{\beta}} - \mathbf{Y}$ é ortogonal a todas as linhas de $\mathbf{X}^T$ e $\eqref{ls6}$ vale pois $\mathbf{X}$ tem posto completo (por hipótese).
+  \end{enumerate}
+  
+  \bibliography{references}
+\end{document}
