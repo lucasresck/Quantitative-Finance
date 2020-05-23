@@ -7,7 +7,7 @@ See the [professor's webpage](https://sites.google.com/site/rodrigodossantostarg
 Topics covered:
 
 - List 1:
-  - Value at Risk;
+  - Value at risk (VaR);
   - Kernel density estimate;
   - Q-Q plots;
   - Random number generator.
@@ -15,14 +15,14 @@ Topics covered:
   - Volatility smile.
 - List 2:
   - Mean excess function;
-  - Generalized Pareto Distributions;
+  - Generalized Pareto distributions;
   - Fit of GPD to data.
 - Lists 3 & 4:
   - Correlation and independence;
   - Copulas;
   - Multivariate normal distribution;
   - Multivariate distribution sample generation;
-  - Principal Components Analysis (PCA).
+  - Principal component analysis (PCA).
   
 Look at the GOOGL call option volatility smile (expiration date on 2020-03-20):
 
