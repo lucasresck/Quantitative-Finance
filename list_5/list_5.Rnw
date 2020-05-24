@@ -5,6 +5,13 @@
 \usepackage{amsmath, amssymb}
 \usepackage{natbib}
 \usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    allcolors=,  % Nothing change colors
+    urlcolor=blue  % URL change color
+}
+\urlstyle{same}
 
 \bibliographystyle{plain}
 
@@ -27,64 +34,291 @@ opts_knit$set(out.format = "latex")
 \begin{document}
   \maketitle
   
-  \begin{enumerate}
-    \item Os seguintes problemas podem ser encontrados em \cite{carmona_rene_2014}.
-      \begin{itemize}
-        \item[4.1]
-          \begin{enumerate}
-            \item[1.] Aparentemente, os resíduos crus não possuem média zero. Sendo assim, é pouco provável que o \textit{plot} seja dos resíduos crus de uma regressão linear de mínimos quadrados.
-            \item[2.] Cada termo $h_{i, i}$ da diagonal da matriz "chapéu" \ $\mathbf{H}$ pode ser visto como a influência que a $i$-ésima observação tem no cálculo de $\mathbf{\hat{\beta}}$. Observe que, no \textit{plot}, à medida que o valor do índice aumenta, parece que a importância da observação também aumenta, pois os resíduos crus são menores. Então esperamos que os valores da diagonal da matriz chapéu sejam crescentes em $i$.
-            
-            \item[3.] Observe que a regressão linear parece dar pouca importância para as observações que estão muito distantes da reta da regressão linear. Em matéria de regressões lineares simples, mínimos quadrados vs. desvios absolutos mínimos, a regressão de desvios absolutos mínimos dá menos importância para valores mais extremos. Logo, espera-se que a linha seja uma regressão linear de desvios absolutos mínimos.
-          \end{enumerate}
-        
-        \item[4.11]
-          \begin{enumerate}
-            \item[1.]
-            
-<<>>=
-attach(Puromycin)
-Puromycin
-conc = conc[1:12]
-rate = rate[1:12]
-fit = nls(rate ~ Va*conc/(conc + K), start = c(Va = 200, K = 0.1))
-@
-            
-            \item[2.]
-            
-<<>>=
-fit
-plot(conc, rate)
-lines(conc, fitted(fit))
-@
-            
-          \end{enumerate}
-      \end{itemize}
-    \item
-      Queremos encontrar $\mathbf{\beta}$ que minimiza $||\mathbf{Y} - \mathbf{X} \mathbf{\beta}||$, assumindo que $\mathbf{X}$ tem posto completo.
+  \section*{Problema 4.1 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item Aparentemente, os resíduos crus não possuem média zero. Sendo assim, é pouco provável que o \textit{plot} seja dos resíduos crus de uma regressão linear de mínimos quadrados.
       
-      Observe que $\mathbf{X\beta}$ pertence ao espaço coluna de $\mathbf{X}$, com os valores de $\mathbf{\beta}$ sendo as coordenadas do espaço com base sendo as colunas de $\mathbf{X}$. Além disso, $\mathrm{col}(\mathbf{X})$ é um subespaço do $\mathbb{R}^n$.
+      \item Cada termo $h_{i, i}$ da diagonal da matriz "chapéu" \ $\mathbf{H}$ pode ser visto como a influência que a $i$-ésima observação tem no cálculo de $\mathbf{\hat{\beta}}$. Observe que, no \textit{plot}, à medida que o valor do índice aumenta, parece que a importância da observação também aumenta, pois os resíduos crus são menores em módulo. Então esperamos que os valores da diagonal da matriz chapéu sejam crescentes em $i$.
       
-      Podemos perceber que, se $\mathbf{\hat{\beta}}$ é o valor de $\mathbf{\beta}$ que minimiza $||\mathbf{Y} - \mathbf{X} \mathbf{\beta}||$, então $Y - \mathbf{X\hat{\beta}}$ é ortogonal a $\mathrm{col}(\mathbf{X})$, facilmente demonstrado com a desigualdade triangular.
-      
-      \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.7\textwidth]{least_squares.png}
-      \end{figure}
-      
-      Então, segue que
-      
-      \begin{align}
-        \mathbf{X\hat{\beta}} - \mathbf{Y} \perp \mathrm{col}(\mathbf{X}) &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{col}(\mathbf{X})^{\perp} \label{ls1} \\
-        &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{lin}\left(\mathbf{X}^T\right)^{\perp} \label{ls2} \\
-        &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{anul}\left(\mathbf{X}^T\right) \label{ls3} \\
-        &\Rightarrow \mathbf{X}^T\left(\mathbf{X\hat{\beta}} - \mathbf{Y}\right) = \mathbf{0} \label{ls4} \\
-        &\Rightarrow \mathbf{X}^T\mathbf{X\hat{\beta}} = \mathbf{X}^T \mathbf{Y} \label{ls5} \\
-        &\Rightarrow \mathbf{\hat{\beta}} = \left(\mathbf{X}^T\mathbf{X}\right)^{-1} \mathbf{X}^T \mathbf{Y} \label{ls6}
-      \end{align}
-      
-      em que \eqref{ls3} vale pois $\mathbf{X\hat{\beta}} - \mathbf{Y}$ é ortogonal a todas as linhas de $\mathbf{X}^T$ e $\eqref{ls6}$ vale pois $\mathbf{X}$ tem posto completo (por hipótese).
-  \end{enumerate}
+      \item Observe que a regressão linear parece dar pouca importância para as observações que estão muito distantes da reta da regressão linear. Em matéria de regressões lineares simples, mínimos quadrados vs. desvios absolutos mínimos, a regressão de desvios absolutos mínimos dá menos importância para valores mais extremos. Logo, espera-se que a linha seja uma regressão linear de desvios absolutos mínimos.
+    \end{enumerate}
   
+  \section*{Problema 4.11 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item
+      
+  <<>>=
+  attach(Puromycin)
+  Puromycin
+  conc = conc[1:12]
+  rate = rate[1:12]
+  fit = nls(rate ~ Va*conc/(conc + K),
+    start = c(Va = 200, K = 0.1))
+  @
+      
+      \item
+      
+  <<>>=
+  fit
+  plot(conc, rate)
+  lines(conc, fitted(fit))
+  @
+      
+    \end{enumerate}
+    
+  \section*{Problema 4.12 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item
+      
+        Sabemos que podemos encontrar a taxa \textit{forward} em função da \textit{yield}:
+      
+        $$f(t, T) = Y(t, T) + (T - t)Y'(T, t)$$
+      
+        Observe que $Y_{GV}(x, \mathbf{\theta}) = Y_{GV}(\tau, \mathbf{\theta})$, quando dados os parâmetros, é apenas uma função de $\tau$. Logo, concluímos que $f_{GV}$ também o será.
+      
+        $$f_{GV}(\tau) = Y_{GV}(\tau) + \tau Y'_{GV}(\tau)$$
+        
+        A derivada pode ser calculada com bastante Regra da Cadeia, e o resultado pode ser verificado na seguinte função:
+          
+<<>>=
+ygv = function(tau, THETA) {
+  theta_1 = THETA[1]
+  theta_2 = THETA[2]
+  theta_3 = THETA[3]
+  theta_4 = THETA[4]
+  Y_GV = theta_1 -
+    theta_2*theta_4*(1-exp(-tau/theta_4))/tau +
+    theta_3*theta_4*(1-exp(-tau/theta_4))^2/(4*tau)
+  Y_GV
+}
+
+fgv = function(tau, THETA) {
+  theta_1 = THETA[1]
+  theta_2 = THETA[2]
+  theta_3 = THETA[3]
+  theta_4 = THETA[4]
+  Y_GV = ygv(tau, THETA)
+  DY_GV = -theta_2*theta_4*((1-exp(-tau/theta_4)) +
+                              tau*(-exp(-tau/theta_4)*
+                                     (-1/theta_4))) +
+    theta_3*theta_4*((1-exp(-tau/theta_4))^2*4 +
+                       4*tau*(2*(1-exp(-tau/theta_4))*
+                                (-exp(-tau/theta_4)*
+                                  (-1/theta_4))))
+  DY_GV
+  f_GV = Y_GV + tau*DY_GV
+  f_GV
+}
+XX = seq(from = 0,to = 30,by = 1/12)
+THETA = c(0.1, 0.3, 0.4, 1)
+FORW = fgv(XX, THETA)
+plot(XX, FORW, type = "l",
+     main = "Exemplo de forward rate")
+@
+          
+        Observe que o parâmetro $\theta_1$ controla a locação da curva no eixo y, eixo da taxa:
+          
+<<>>==
+THETA_1 = c(5, 0.3,0.4,1)
+FORW_1 = fgv(XX, THETA_1)
+THETA_2 = c(10, 0.3,0.4,1)
+FORW_2 = fgv(XX, THETA_2)
+plot(XX, FORW, type = "l",
+     main = "theta_1 controla a locação da taxa")
+lines(XX, FORW_1)
+lines(XX, FORW_2)
+@
+          
+        O parâmetro $\theta_4$ de alguma forma controla o formato da curva:
+
+<<>>==
+THETA_3 = c(0.1, 0.3, 0.4, 40)
+FORW_3 = fgv(XX, THETA_3)
+THETA_4 = c(0.1, 0.3, 0.4, 50)
+FORW_4 = fgv(XX, THETA_4)
+plot(XX, FORW, type="l",
+     main = "theta_4 controla o formato da curva")
+lines(XX, FORW_3)
+lines(XX, FORW_4)
+@
+          
+        O parâmetro $\theta_3$ parece controlar se a curva é crescente ou decrescente:
+
+<<>>==
+THETA_5 = c(0.1, 0.3, -1, 1)
+FORW_5 = fgv(XX, THETA_5)
+THETA_6 = c(0.1, 0.3, -4, 1)
+FORW_6 = fgv(XX, THETA_6)
+plot(XX, FORW, type="l",
+     main = "theta_3 parece controlar
+     se a curva cresce ou decresce",
+     ylim = c(-80, 40))
+lines(XX, FORW_5)
+lines(XX, FORW_6)
+@
+      
+      \item Sabemos que podemos escrever a \textit{yield} como
+      
+        $$Y(t, T) = -\dfrac{1}{T - t} \log P(t, T)$$
+        
+        Se isolamos $P(t, T) = P(\tau)$, temos:
+        
+        $$P_{GV}(\tau) = \exp\left[-\tau Y_{GV}(\tau)\right]$$
+        
+        Então montamos a função:
+        
+<<>>=
+bgv = function(tau, THETA) {
+  theta_1 = THETA[1]
+  theta_2 = THETA[2]
+  theta_3 = THETA[3]
+  theta_4 = THETA[4]
+  Y_GV = ygv(tau, THETA)
+  P_GV = exp(-tau*Y_GV)
+  P_GV
+}
+@
+        
+        Então verificamos os plots para os mesmos parâmetros de antes:
+        
+<<>>=
+PRICE = bgv(XX, THETA)
+plot(XX, PRICE, type = "l",
+     main = "Exemplo de price")
+
+PRICE_1 = bgv(XX, THETA_1)
+PRICE_2 = bgv(XX, THETA_2)
+plot(XX, PRICE_1, type = "l")
+lines(XX, PRICE_2)
+
+PRICE_3 = bgv(XX, THETA_3)
+PRICE_4 = bgv(XX, THETA_4)
+plot(XX, PRICE_3, type = "l")
+lines(XX, PRICE_4)
+
+PRICE_5 = bgv(XX, THETA_5)
+PRICE_6 = bgv(XX, THETA_6)
+plot(XX, PRICE_5, type = "l")
+lines(XX, PRICE_6)
+@
+      \item
+
+<<>>=
+data(GermanB041700, "GermanB041700", package="Rsafd")
+head(GermanB041700)
+
+# Definimos a função de perda
+SSE = function(THETA) {
+  TAU = GermanB041700$Life
+  sum((GermanB041700$Price - bgv(TAU, THETA))^2)
+}
+
+# Otimizamos
+GB.fit = optim(par = THETA, fn = SSE)
+GB.fit
+
+# Plotamos o resultado
+TAU = GermanB041700$Life
+plot(GermanB041700$Price, bgv(TAU, GB.fit$par),
+     main = "Preço real vs. preço estimado")
+abline(0, 1)
+@
+
+        Observe que não obtivemos um \textit{fit} perfeito, porém nada grotesco.
+
+    \end{enumerate}
+    
+  \section*{Problema 2}
+  
+    Queremos encontrar $\mathbf{\beta}$ que minimiza $||\mathbf{Y} - \mathbf{X} \mathbf{\beta}||$, assumindo que $\mathbf{X}$ tem posto completo.
+    
+    Observe que $\mathbf{X\beta}$ pertence ao espaço coluna de $\mathbf{X}$, com os valores de $\mathbf{\beta}$ sendo as coordenadas do espaço com base sendo as colunas de $\mathbf{X}$. Além disso, $\mathrm{col}(\mathbf{X})$ é um subespaço do $\mathbb{R}^n$.
+    
+    Podemos perceber que, se $\mathbf{\hat{\beta}}$ é o valor de $\mathbf{\beta}$ que minimiza $||\mathbf{Y} - \mathbf{X} \mathbf{\beta}||$, então $Y - \mathbf{X\hat{\beta}}$ é ortogonal a $\mathrm{col}(\mathbf{X})$, facilmente demonstrado com a desigualdade triangular.
+    
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.7\textwidth]{least_squares.png}
+    \end{figure}
+    
+    Então, segue que
+    
+    \begin{align}
+      \mathbf{X\hat{\beta}} - \mathbf{Y} \perp \mathrm{col}(\mathbf{X}) &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{col}(\mathbf{X})^{\perp} \label{ls1} \\
+      &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{lin}\left(\mathbf{X}^T\right)^{\perp} \label{ls2} \\
+      &\Rightarrow \mathbf{X\hat{\beta}} - \mathbf{Y} \in \mathrm{anul}\left(\mathbf{X}^T\right) \label{ls3} \\
+      &\Rightarrow \mathbf{X}^T\left(\mathbf{X\hat{\beta}} - \mathbf{Y}\right) = \mathbf{0} \label{ls4} \\
+      &\Rightarrow \mathbf{X}^T\mathbf{X\hat{\beta}} = \mathbf{X}^T \mathbf{Y} \label{ls5} \\
+      &\Rightarrow \mathbf{\hat{\beta}} = \left(\mathbf{X}^T\mathbf{X}\right)^{-1} \mathbf{X}^T \mathbf{Y} \label{ls6}
+    \end{align}
+    
+    em que \eqref{ls3} vale pois $\mathbf{X\hat{\beta}} - \mathbf{Y}$ é ortogonal a todas as linhas de $\mathbf{X}^T$ e $\eqref{ls6}$ vale pois $\mathbf{X}$ tem posto completo (por hipótese).
+    
+  \section*{Problema 3}
+    
+    A composição atual do índice pode ser encontrada \href{http://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-amplos/indice-ibovespa-ibovespa-composicao-da-carteira.htm}{aqui}. Escolhemos alguns ativos, aqueles com maiores participações no índice. Tomamos os dados com periodicidade semanal, de uma janela de 5 anos.
+      
+<<>>=
+ativos = c("ITUB4.SA", "B3SA3.SA", "PETR4.SA",
+           "BBDC4.SA", "PETR3.SA")
+suppressMessages(library(quantmod))
+suppressMessages(
+  suppressWarnings(getSymbols(Symbols = c("^BVSP", ativos),
+                              from = "2015-05-24",
+                              to = "2020-05-24",
+                              periodicity = "weekly")))
+head(BVSP)
+@
+    
+    Consideramos a taxa livre de risco como a Selic. Neste caso, a deixamos fixa, como $3\%/\textrm{ano} = (3/52)\%/\textrm{semana}$. Então calculamos os log-retornos e os retornos em excesso. Então ajustamos a regressão linear de mínimos quadrados. Vejamos para ITUB4 $\sim$ BVSP. Dividimos todo o período em dois, para podermos avaliar o beta em cada caso.
+    
+<<>>=
+LRetBVSP = diff(log(BVSP$BVSP.Adjusted))
+LRetITUB4.SA = diff(log(ITUB4.SA$ITUB4.SA.Adjusted))
+SELIC = 0.03/52
+LRetBVSP = LRetBVSP - SELIC
+LRetITUB4.SA = LRetITUB4.SA - SELIC
+fit = lm(LRetITUB4.SA[1:131] ~ LRetBVSP[1:131])
+summary(fit)
+fit = lm(LRetITUB4.SA[132:262] ~ LRetBVSP[132:262])
+summary(fit)
+@
+
+    Podemos observar que o $R^2$ das duas regressões foi razoável, indicando que há, sim, uma tendência linear entre BVSP e ITUB4. Além disso, o intercepto é próximo de zero. Observe que o beta varia um pouco entre as duas regressões, indicando não estabilidade. Porém, sabemos que é muito difícil de conseguir isso na prática.
+    
+    Realizamos a mesma coisa para os outros ativos:
+    
+<<>>=
+LRetB3SA3.SA = diff(log(B3SA3.SA$B3SA3.SA.Adjusted))
+LRetB3SA3.SA = LRetB3SA3.SA - SELIC
+summary(lm(LRetB3SA3.SA[1:131] ~ LRetBVSP[1:131]))
+summary(lm(LRetB3SA3.SA[132:262] ~ LRetBVSP[132:262]))
+
+LRetPETR4.SA = diff(log(PETR4.SA$PETR4.SA.Adjusted))
+LRetPETR4.SA = LRetPETR4.SA - SELIC
+summary(lm(LRetPETR4.SA[1:131] ~ LRetBVSP[1:131]))
+summary(lm(LRetPETR4.SA[132:262] ~ LRetBVSP[132:262]))
+
+LRetBBDC4.SA = diff(log(BBDC4.SA$BBDC4.SA.Adjusted))
+LRetBBDC4.SA = LRetBBDC4.SA - SELIC
+summary(lm(LRetBBDC4.SA[1:131] ~ LRetBVSP[1:131]))
+summary(lm(LRetBBDC4.SA[132:262] ~ LRetBVSP[132:262]))
+
+LRetPETR3.SA = diff(log(PETR3.SA$PETR3.SA.Adjusted))
+LRetPETR3.SA = LRetPETR3.SA - SELIC
+summary(lm(LRetPETR3.SA[1:131] ~ LRetBVSP[1:131]))
+summary(lm(LRetPETR3.SA[132:262] ~ LRetBVSP[132:262]))
+@
+
+    Podemos concluir, dos ativos escolhidos:
+    \begin{itemize}
+      \item $R^2$ razoavelmente altos indicam uma relação linear entre o IBOVESPA e os ativos;
+      \item Interceptos próximos de zero;
+      \item Os resíduos têm mediana próxima de zero;
+      \item Os betas variam no tempo.
+    \end{itemize}
+    
+    Ou seja, várias das hipóteses do CAPM são satisfeitas, mas não todas. Os resultados obtidos estão dentro do esperado, na verdade, inclusive as variações dos betas. Já existe um debate sobre a validade do modelo e inclusive uma generalização dele que considera a variação do beta.
+
   \bibliography{references}
 \end{document}
