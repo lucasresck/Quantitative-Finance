@@ -23,6 +23,18 @@ Topics covered:
   - Multivariate normal distribution;
   - Multivariate distribution sample generation;
   - Principal component analysis (PCA).
+- List 5:
+  - Linear regression:
+    - Simple;
+    - Multiple;
+    - Least squares;
+    - Least absolute deviations;
+    - Non-linear.
+  - Term structure of interest rates:
+    - Zero coupon bond;
+    - Yield;
+    - Forward rate.
+  - Capital Asset Pricing Model (CAPM) and IBOVESPA.
   
 Look at the GOOGL call option volatility smile (expiration date on 2020-03-20):
 
