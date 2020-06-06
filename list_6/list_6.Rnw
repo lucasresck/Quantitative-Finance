@@ -26,9 +26,9 @@
 
             
 <<setup, include=FALSE>>=
-library(knitr)
-opts_chunk$set(fig.align="center", fig.height=6, fig.width=8)
-opts_knit$set(out.format = "latex")
+# library(knitr)
+# opts_chunk$set(fig.align="center", fig.height=6, fig.width=8)
+# opts_knit$set(out.format = "latex")
 @
 
 \begin{document}
@@ -89,7 +89,7 @@ fX = function(N) {
   X
 }
 X = fX(N)
-head(X)
+plot(X, main = "Amostra de X_t")
 @
       \item
 <<>>=
@@ -140,7 +140,7 @@ N = 1000
 NS = 500
 XX = c()
 QQ = c()
-t = seq(100, 1000, 10)
+t = seq(100, N, 10)
 quantiles = c(0.01, 0.02, 0.03, 0.04,
               0.05, 0.1, 0.25, 0.5,
               0.75, 0.9, 0.95, 0.96,
@@ -170,6 +170,131 @@ for (i in 1:15) {
 @
       
       \item
+<<>>=
+proxy = QQ[dim(QQ)[1],]
+
+suppressMessages(library(quantmod))
+suppressWarnings(suppressMessages(getSymbols("CPN")))
+head(CPN)
+dim(CPN)
+CPN = CPN$CPN.Close
+CPN = CPN[!is.na(CPN)]
+CPNLRet = diff(log(CPN))
+CPNLRet = CPNLRet[2:length(CPNLRet)]
+@
+
+        Para CPN:
+        
+<<>>=
+X = as.vector(CPN)
+phi_1 = fphi_1(X)
+sigma_2 = fsigma_2(X, phi_1)
+df = fdf(phi_1, sigma_2)
+proxy
+df
+@
+
+        Portanto, não rejeitamos o passeio aleatório com nível 1\%. Para CPNLRet:
+        
+<<>>=
+X = as.vector(CPNLRet)
+phi_1 = fphi_1(X)
+sigma_2 = fsigma_2(X, phi_1)
+df = fdf(phi_1, sigma_2)
+proxy
+df
+@
+        
+        Também não rejeitamos para esse nível. Agora verificamos o \textit{augmented DF}:
+        
+<<>>=
+library(tseries)
+adf.test(CPN)
+adf.test(CPNLRet)
+@
+
+        Neste caso, rejeitamos a hipótese de passeio aleatório com nível 1\% apenas para o CPNLRet. Ou seja, a série de log retorno parece ser estacionária.
+        
+    \end{enumerate}
+  
+  \section*{Problema 6.13 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item
+        \begin{align*}
+          X_t &= \mu + X_{t-1} + W_t \\
+          &= \mu + (\mu + X_{t-2} + W_{t-1}) + W_t \\
+          &= t \mu + x_0 + \sum_{i = 1}^t W_i
+        \end{align*}
+        
+      \item
+        \begin{align*}
+          \E\{X_t\} &= \E\left\{t \mu + x_0 + \sum_{i = 1}^t W_i\right\} \\
+          &= t\mu + x_0
+        \end{align*}
+        
+        \begin{align*}
+          \var\{X_t\} &= \var\left\{t \mu + x_0 + \sum_{i = 1}^t W_i\right\} \\
+          &= \var\left\{\sum_{i = 1}^t W_i\right\} \\
+          &= \sum_{i = 1}^t\var\left\{ W_i\right\} \ \ \ \textrm{($W_i$ são i.i.d.)}\\
+          &= t \sigma^2
+        \end{align*}
+        
+        \begin{align*}
+          \gamma(s, t) &= \cov\{X_s, X_t\} \\
+          &= \cov\left\{s \mu + x_0 + \sum_{i = 1}^s W_i, t \mu + x_0 + \sum_{i = 1}^t W_i\right\} \\
+          &= \cov\left\{\sum_{i = 1}^s W_i, \sum_{i = 1}^t W_i\right\} \\
+          &= \sum_{i = 1}^s \sum_{i = 1}^t \cov\{W_i, W_j\} \\
+          &= \sum_{i = 1}^{\textrm{min}(s, t)} \cov\{W_i, W_i\} \\
+          &= \textrm{min}(s, t) \sigma^2
+        \end{align*}
+        
+      \item $\{X_t\}_t$ não é estacionário, pois as estatísticas, particularmente média e variância, mudam com o tempo.
+      
+      \item
+        \begin{align*}
+          \nabla X_t &= X_t - X_{t - 1} \\
+          &= t \mu + x_0 + \sum_{i = 1}^t W_i - \left[(t - 1) \mu + x_0 + \sum_{i = 1}^{t - 1} W_i\right] \\
+          &= \mu + W_t
+        \end{align*}
+        
+        \begin{align*}
+          \gamma(s, t) &= \cov\{\nabla X_s, \nabla X_t\} \\
+           &= \cov\{\mu + W_s, \mu + W_t\} \\
+           &= \cov\{W_s, W_t\} \\
+           &= \begin{cases}\sigma^2, &s = t \\
+            0, &s \ne t\end{cases}
+        \end{align*}
+        
+      \item Como $W_i$ são i.i.d, $W_i + \mu$ também o são, logo o processo $\{\nabla X_t\}$ é estacionário.
+      
+      \item
+<<>>=
+x_0 = 1.5
+mu = 0.5
+n = 128
+WN = rnorm(n)
+X = c(x_0)
+par(mfrow = c(1, 1))
+for (i in 1:n) {
+  X = c(X, mu + X[length(X)] + WN[i])
+}
+plot(seq(0, n), X, main = "Passeio Aleatório com Drift",
+     xlab = "t", ylab = "X_t")
+@
+
+        Observe que $x_0$ representa o ponto inicial do passeio aleatório. No valor esperado, $\E\{X_t\} = t\mu + x_0$, logo $x_0$ e $\mu$ podem ser interpretados como os parâmetros de uma função linear que aproxima esses dados.
+        
+<<>>=
+plot(seq(0, n), X, main = "Passeio Aleatório com Drift",
+     xlab = "t", ylab = "X_t")
+abline(x_0, mu)
+@
+<<>>=
+plot(X[1:length(X)-1], X[2:length(X)])
+@
+
+        Um \textit{lag plot} de \textit{lag} 1 nos mostra dados muito próximos de uma reta identidade. Isso mostra que, de certa forma, $X_{t-1}$ é muito importante para o cálculo de $X_{t}$, porém isso é óbvio pois é a definição do modelo. Na verdade, estamos plotando $X_{t-1}$ vs. $\mu + X_{t-1} + W_t$ e verificamos que o resultado é muito próximo de uma identidade deslocada por $\mu$ com ruído de média zero.
+      
     \end{enumerate}
 
   \bibliography{references}
