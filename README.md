@@ -35,6 +35,12 @@ Topics covered:
     - Yield;
     - Forward rate.
   - Capital Asset Pricing Model (CAPM) and IBOVESPA.
+- List 6:
+  - Time series;
+  - Stationarity and invertibility;
+  - Monte Carlo simulations;
+  - Dickey-Fuller and augmented DF tests;
+  - Random Walk with Drift.
   
 Look at the GOOGL call option volatility smile (expiration date on 2020-03-20):
 
