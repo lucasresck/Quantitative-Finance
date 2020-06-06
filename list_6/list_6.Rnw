@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    allcolors=,  % Nothing change colors
+    urlcolor=blue  % URL change color
+}
+\urlstyle{same}
+
+\bibliographystyle{plain}
+
+\title{Finanças Quantitativas \\
+  \large Lista de exercícios 6}
+\author{Lucas Emanuel Resck Domingues}
+\date{Junho de 2020}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\cov}{\textrm{cov}}
+\DeclareMathOperator{\var}{\textrm{var}}
+
+            
+<<setup, include=FALSE>>=
+library(knitr)
+opts_chunk$set(fig.align="center", fig.height=6, fig.width=8)
+opts_knit$set(out.format = "latex")
+@
+
+\begin{document}
+  \maketitle
+  
+  \section*{Problema 6.6 \cite{carmona_rene_2014}}
+  
+    \begin{itemize}
+      \item[(i)]
+        \begin{enumerate}
+          \item No lado esquerdo da equação:
+          
+            \begin{align*}
+              X_t - X_{t-1} &= X_t - B X_t \\
+              &= (1 - B) X_t
+            \end{align*}
+            
+            Então concluímos $\phi(z) = 1 - z$. Do lado direito:
+            
+            \begin{align*}
+              W_t - 1,5 W_{t-1} &= W_t - 1,5 B W_t \\
+              &= (1 - 1,5 B) W_t
+            \end{align*}
+            
+            Logo, $\theta(z) = 1 - 1,5 z$. Portanto, o modelo pode ser escrito:
+            
+            $$\phi(B)X_t = \theta(B)W_t$$
+            
+          \item O modelo é estacionário desde que a parte AR seja. Se assumimos $\phi(z) = 0$, temos $z = 1$. Como $|z| \le 1$, o modelo não é estacionário (era necessário $|z| > 1$).
+          
+          Da mesma forma o modelo é invertível se a parte MA o é. Porém, $\theta(z) = 0$ implica em $z < 1$, de forma que o modelo não é invertível.
+        \end{enumerate}
+        
+      \item[(ii)]
+        \begin{enumerate}
+          \item De forma análoga ao exercício anterior, temos
+            
+            $$\phi(B)X_t = \theta(B)W_t$$
+            
+            com $\phi(z) = 1 - 0,8z$ e $\theta(z) = 1 - 0,5 z$
+          
+          \item Neste caso, para ambos os polinômios, $|z| > 1$, de modo que o modelo é estacionário e invertível.
+        \end{enumerate}
+    \end{itemize}
+    
+  \section*{Problema 6.11 \cite{carmona_rene_2014}}
+    \begin{enumerate}
+      \item
+<<>>=
+N = 5000
+fX = function(N) {
+  WN = rnorm(N)
+  X = c(WN[1])
+  for (t in 2:N) {
+    X_t = X[length(X)] + WN[t]
+    X = c(X, X_t)
+  }
+  X
+}
+X = fX(N)
+head(X)
+@
+      \item
+<<>>=
+fphi_1 = function(X) {
+  n = length(X)
+  sum_1 = 0
+  sum_2 = 0
+  for (i in 2:n) {
+    sum_1 = sum_1 + X[i]*X[i-1]
+    sum_2 = sum_2 + X[i-1]^2
+  }
+  sum_1/sum_2
+}
+
+fsigma_2 = function(X, phi_1) {
+  n = length(X)
+  sum = 0
+  for (i in 2:n) {
+    sum = sum + (X[i] - phi_1*X[i-1])^2
+  }
+  sum/(n-1)
+}
+
+fdf = function(phi_1, sigma_2) {
+  (phi_1 - 1)/sqrt(sigma_2)
+}
+
+PHI_1 = c()
+SIGMA_2 = c()
+DF = c()
+for (n in 1:N) {
+  phi_1 = fphi_1(X[1:n])
+  PHI_1 = c(PHI_1, phi_1)
+  sigma_2 = fsigma_2(X[1:n], phi_1)
+  SIGMA_2 = c(SIGMA_2, sigma_2)
+  df = fdf(phi_1, sigma_2)
+  DF = c(DF, df)
+}
+
+plot(PHI_1)
+plot(SIGMA_2)
+@
+
+        Ambas as estimativas convergem para seus valores verdadeiros (ou seja, 1).
+      \item
+<<>>=
+N = 1000
+NS = 500
+XX = c()
+QQ = c()
+t = seq(100, 1000, 10)
+quantiles = c(0.01, 0.02, 0.03, 0.04,
+              0.05, 0.1, 0.25, 0.5,
+              0.75, 0.9, 0.95, 0.96,
+              0.97, 0.98, 0.99)
+
+for (i in 1:NS) {
+  X = fX(N)
+  XX = cbind(XX, X)
+}
+
+for (n in t) {
+  q = quantile(XX[n,], quantiles, type=1)
+  QQ = cbind(QQ, q)
+}
+
+QQ = t(QQ)
+
+dim(QQ)
+@
+      \item
+<<>>=
+par(mfrow = c(3, 5))
+for (i in 1:15) {
+  plot(t, QQ[,i], xlab = "t", ylab = "Quantile",
+       main = paste0("q = ", quantiles[i]))
+}
+@
+      
+      \item
+    \end{enumerate}
+
+  \bibliography{references}
+\end{document}
